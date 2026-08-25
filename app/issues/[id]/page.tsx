@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { formatCap } from "@/lib/money";
 import type { Comment } from "@/lib/comments";
-import type { Issue, IssuePriority, Product } from "@/lib/types";
+import type { Issue, IssueLink, IssuePriority, Product } from "@/lib/types";
 
 const STATUSES = ["backlog", "open", "doing", "done", "cancelled"] as const;
 const PRIORITIES = ["critical", "high", "medium", "low"] as const;
@@ -16,19 +16,26 @@ export default function IssueDetailPage() {
   const [issue, setIssue] = useState<Issue | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [links, setLinks] = useState<IssueLink[]>([]);
   const [newComment, setNewComment] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState("");
+  const [editingBody, setEditingBody] = useState(false);
+  const [bodyDraft, setBodyDraft] = useState("");
 
   const load = useCallback(async () => {
-    const [issueRes, productsRes, commentsRes] = await Promise.all([
+    const [issueRes, productsRes, commentsRes, linksRes] = await Promise.all([
       fetch(`/api/issues/${id}`).then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
       fetch(`/api/issues/${id}/comments`).then((r) => r.json()),
+      fetch(`/api/issues/${id}/links`).then((r) => r.json()),
     ]);
     setIssue(issueRes.issue || null);
     setProducts(productsRes.products || []);
     setComments(commentsRes.comments || []);
+    setLinks(linksRes.links || []);
   }, [id]);
 
   useEffect(() => {
@@ -79,6 +86,44 @@ export default function IssueDetailPage() {
     }
   }
 
+  async function saveTitle() {
+    if (!titleDraft.trim() || titleDraft.trim() === issue?.title) {
+      setEditingTitle(false);
+      return;
+    }
+    setSaving(true);
+    const res = await fetch(`/api/issues/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: titleDraft.trim() }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setIssue(data.issue);
+    }
+    setSaving(false);
+    setEditingTitle(false);
+  }
+
+  async function saveBody() {
+    if (bodyDraft === issue?.body) {
+      setEditingBody(false);
+      return;
+    }
+    setSaving(true);
+    const res = await fetch(`/api/issues/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ body: bodyDraft }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setIssue(data.issue);
+    }
+    setSaving(false);
+    setEditingBody(false);
+  }
+
   async function handleDelete() {
     if (!confirm("Delete this issue?")) return;
     const res = await fetch(`/api/issues/${id}`, { method: "DELETE" });
@@ -110,8 +155,53 @@ export default function IssueDetailPage() {
           "issue"
         )}
       </div>
-      <h1>{issue.title}</h1>
-      {issue.body && <p className="lede">{issue.body}</p>}
+      {editingTitle ? (
+        <div className="inline-edit">
+          <input
+            className="inline-edit-input inline-edit-title"
+            value={titleDraft}
+            onChange={(e) => setTitleDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") saveTitle();
+              if (e.key === "Escape") setEditingTitle(false);
+            }}
+            onBlur={saveTitle}
+            autoFocus
+          />
+        </div>
+      ) : (
+        <h1
+          className="editable-title"
+          onClick={() => { setTitleDraft(issue.title); setEditingTitle(true); }}
+        >
+          {issue.title}
+        </h1>
+      )}
+
+      {editingBody ? (
+        <div className="inline-edit">
+          <textarea
+            className="inline-edit-input inline-edit-body"
+            value={bodyDraft}
+            onChange={(e) => setBodyDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setEditingBody(false);
+              if (e.key === "Enter" && e.metaKey) saveBody();
+            }}
+            onBlur={saveBody}
+            rows={3}
+            autoFocus
+          />
+          <span className="hint">Cmd+Enter to save, Esc to cancel</span>
+        </div>
+      ) : (
+        <p
+          className="lede editable-body"
+          onClick={() => { setBodyDraft(issue.body); setEditingBody(true); }}
+        >
+          {issue.body || <span className="hint">Click to add description…</span>}
+        </p>
+      )}
 
       <div className="detail-grid">
         <div className="detail-row">
@@ -182,12 +272,51 @@ export default function IssueDetailPage() {
           </span>
         </div>
 
-        {issue.due_on && (
-          <div className="detail-row">
-            <span className="detail-label">Due</span>
-            <span>{issue.due_on}</span>
-          </div>
-        )}
+        <div className="detail-row">
+          <span className="detail-label">Due</span>
+          <span className="due-date-cell">
+            <input
+              type="date"
+              className="date-input"
+              value={issue.due_on || ""}
+              onChange={async (e) => {
+                const val = e.target.value || null;
+                setSaving(true);
+                const res = await fetch(`/api/issues/${id}`, {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ due_on: val }),
+                });
+                if (res.ok) {
+                  const data = await res.json();
+                  setIssue(data.issue);
+                }
+                setSaving(false);
+              }}
+            />
+            {issue.due_on && (
+              <button
+                className="chip chip-sm"
+                type="button"
+                onClick={async () => {
+                  setSaving(true);
+                  const res = await fetch(`/api/issues/${id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ due_on: null }),
+                  });
+                  if (res.ok) {
+                    const data = await res.json();
+                    setIssue(data.issue);
+                  }
+                  setSaving(false);
+                }}
+              >
+                clear
+              </button>
+            )}
+          </span>
+        </div>
 
         <div className="detail-row">
           <span className="detail-label">Created</span>
@@ -201,6 +330,27 @@ export default function IssueDetailPage() {
       </div>
 
       {error && <div className="err" style={{ marginTop: 12 }}>{error}</div>}
+
+      {links.length > 0 && (
+        <>
+          <h2 className="section-title">GitHub Links</h2>
+          <div className="gh-links">
+            {links.map((link) => (
+              <a
+                key={link.id}
+                href={link.github_html_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gh-link-item"
+              >
+                <span className={`gh-state gh-state-${link.github_state}`}>{link.github_state}</span>
+                <span className="gh-link-title">{link.github_title}</span>
+                <span className="gh-link-repo">{link.github_owner}/{link.github_repo}#{link.github_issue_number}</span>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
 
       <h2 className="section-title">Notes</h2>
       <div className="comments-list">
