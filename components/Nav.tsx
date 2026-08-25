@@ -7,7 +7,8 @@ const links = [
   { href: "/", label: "Portfolio" },
   { href: "/board", label: "Kanban" },
   { href: "/issues", label: "Issues" },
-  { href: "/issues/new", label: "Create" },
+  { href: "/activity", label: "Activity" },
+  { href: "/settings", label: "Settings" },
 ];
 
 export function Nav() {

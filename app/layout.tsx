@@ -3,6 +3,7 @@ import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { KeyboardHelp } from "@/components/KeyboardHelp";
 import { KeyboardNav } from "@/components/KeyboardNav";
+import { ToastContainer } from "@/components/Toast";
 
 export const metadata: Metadata = {
   title: "Boss PM — Mangu Platforms",
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
         <KeyboardHelp />
         <KeyboardNav />
+        <ToastContainer />
       </body>
     </html>
   );
