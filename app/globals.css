@@ -348,6 +348,17 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 /* Export row */
 .export-row { display: flex; gap: 10px; margin-top: 8px; }
 
+/* Agent cards */
+.agent-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.agent-card { background: var(--ink-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.agent-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.agent-card-stats { display: flex; gap: 16px; margin-bottom: 10px; }
+.agent-stat { display: flex; flex-direction: column; gap: 2px; }
+.agent-stat-value { font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--paper); }
+.agent-stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mute); }
+.agent-progress { height: 4px; background: var(--ink-3); border-radius: 2px; overflow: hidden; }
+.agent-progress-fill { height: 100%; background: var(--engine); border-radius: 2px; transition: width 0.3s; }
+
 /* Comments/Notes */
 .comments-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 .comment-item {
