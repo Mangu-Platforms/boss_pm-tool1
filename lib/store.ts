@@ -78,6 +78,31 @@ export function createIssue(input: CreateIssueInput): Issue {
   return issue;
 }
 
+export function getIssue(id: string): Issue | undefined {
+  return mem().issues.find((i) => i.id === id);
+}
+
+export function updateIssue(id: string, updates: Partial<Pick<Issue, "status" | "title" | "body" | "due_on">>): Issue | null {
+  const m = mem();
+  const idx = m.issues.findIndex((i) => i.id === id);
+  if (idx < 0) return null;
+  const issue = m.issues[idx];
+  if (updates.status !== undefined) issue.status = updates.status;
+  if (updates.title !== undefined) issue.title = updates.title;
+  if (updates.body !== undefined) issue.body = updates.body;
+  if (updates.due_on !== undefined) issue.due_on = updates.due_on;
+  issue.updated_at = new Date().toISOString();
+  return issue;
+}
+
+export function deleteIssue(id: string): boolean {
+  const m = mem();
+  const idx = m.issues.findIndex((i) => i.id === id);
+  if (idx < 0) return false;
+  m.issues.splice(idx, 1);
+  return true;
+}
+
 export function upsertLinks(incoming: IssueLink[]): IssueLink[] {
   const m = mem();
   for (const row of incoming) {

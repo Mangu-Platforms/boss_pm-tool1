@@ -1,24 +1,26 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AgentName, CreateIssueInput, Issue, Product } from "@/lib/types";
 
 type Props = {
   products: Product[];
   defaultProductId?: string;
   onCreated?: (issue: Issue) => void;
+  onOptimistic?: (issue: Issue) => void;
 };
 
-export function IssueCreate({ products, defaultProductId, onCreated }: Props) {
+export function IssueCreate({ products, defaultProductId, onCreated, onOptimistic }: Props) {
   const titleRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const [productId, setProductId] = useState(defaultProductId || products[0]?.id || "");
   const [kind, setKind] = useState<"user" | "agent">("agent");
   const [user, setUser] = useState("operator");
   const [agent, setAgent] = useState<AgentName>("alice");
   const [cap, setCap] = useState("2.00");
   const [err, setErr] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!productId && (defaultProductId || products[0]?.id)) {
@@ -28,7 +30,14 @@ export function IssueCreate({ products, defaultProductId, onCreated }: Props) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === "c" && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
+      if (
+        e.key.toLowerCase() === "c" &&
+        !e.metaKey &&
+        !e.ctrlKey &&
+        !(e.target instanceof HTMLInputElement) &&
+        !(e.target instanceof HTMLTextAreaElement) &&
+        !(e.target instanceof HTMLSelectElement)
+      ) {
         e.preventDefault();
         titleRef.current?.focus();
       }
@@ -37,19 +46,45 @@ export function IssueCreate({ products, defaultProductId, onCreated }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  function submit() {
+  async function submit() {
     setErr(null);
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) return;
+
     const cents = kind === "agent" ? Math.round(parseFloat(cap || "0") * 100) : null;
     const input: CreateIssueInput = {
       product_id: productId,
-      title,
+      title: trimmedTitle,
+      body: body.trim() || undefined,
       assignee_kind: kind,
       assignee_user: kind === "user" ? user : null,
       agent_name: kind === "agent" ? agent : null,
       cost_cap_cents: cents,
     };
-    const mark = performance.now();
-    startTransition(async () => {
+
+    const now = new Date().toISOString();
+    const optimisticIssue: Issue = {
+      id: `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      product_id: productId,
+      title: trimmedTitle,
+      body: body.trim(),
+      status: "open",
+      assignee_kind: kind,
+      assignee_user: kind === "user" ? user : null,
+      agent_name: kind === "agent" ? agent : null,
+      cost_cap_cents: cents,
+      due_on: null,
+      created_at: now,
+      updated_at: now,
+      pending: true,
+    };
+
+    onOptimistic?.(optimisticIssue);
+    setTitle("");
+    setBody("");
+    setSubmitting(true);
+
+    try {
       const res = await fetch("/api/issues", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -58,12 +93,16 @@ export function IssueCreate({ products, defaultProductId, onCreated }: Props) {
       const data = await res.json();
       if (!res.ok) {
         setErr(data.error || "create failed");
+        setTitle(trimmedTitle);
         return;
       }
-      performance.measure("issue-create", { start: mark });
-      setTitle("");
       onCreated?.(data.issue);
-    });
+    } catch {
+      setErr("Network error — issue saved optimistically");
+      setTitle(trimmedTitle);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -74,13 +113,22 @@ export function IssueCreate({ products, defaultProductId, onCreated }: Props) {
         submit();
       }}
     >
-      <div className="kicker">Create · press C</div>
+      <div className="composer-header">
+        <span className="kicker">Create issue · press C</span>
+        {submitting && <span className="hint syncing">saving…</span>}
+      </div>
       <input
         ref={titleRef}
         placeholder="Issue title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         autoComplete="off"
+      />
+      <textarea
+        placeholder="Description (optional)"
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        rows={2}
       />
       <div className="row">
         <label>
@@ -123,11 +171,11 @@ export function IssueCreate({ products, defaultProductId, onCreated }: Props) {
             placeholder="2.00"
           />
         </label>
-        <button className="go" disabled={pending || !title.trim()} type="submit">
-          {pending ? "…" : "Add"}
+        <button className="go" disabled={submitting || !title.trim()} type="submit">
+          {submitting ? "…" : "Add"}
         </button>
       </div>
-      {err ? <div className="err">{err}</div> : <div className="hint">Agent work needs a cap. Sync is one-way from GitHub.</div>}
+      {err && <div className="err">{err}</div>}
     </form>
   );
 }
