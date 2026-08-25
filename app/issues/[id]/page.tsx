@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { formatCap } from "@/lib/money";
+import type { Comment } from "@/lib/comments";
 import type { Issue, IssuePriority, Product } from "@/lib/types";
 
 const STATUSES = ["backlog", "open", "doing", "done", "cancelled"] as const;
@@ -14,16 +15,20 @@ export default function IssueDetailPage() {
   const router = useRouter();
   const [issue, setIssue] = useState<Issue | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    const [issueRes, productsRes] = await Promise.all([
+    const [issueRes, productsRes, commentsRes] = await Promise.all([
       fetch(`/api/issues/${id}`).then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
+      fetch(`/api/issues/${id}/comments`).then((r) => r.json()),
     ]);
     setIssue(issueRes.issue || null);
     setProducts(productsRes.products || []);
+    setComments(commentsRes.comments || []);
   }, [id]);
 
   useEffect(() => {
@@ -196,6 +201,45 @@ export default function IssueDetailPage() {
       </div>
 
       {error && <div className="err" style={{ marginTop: 12 }}>{error}</div>}
+
+      <h2 className="section-title">Notes</h2>
+      <div className="comments-list">
+        {comments.length === 0 && <p className="hint">No notes yet.</p>}
+        {comments.map((c) => (
+          <div key={c.id} className="comment-item">
+            <div className="comment-meta">
+              <span className="comment-author">{c.author}</span>
+              <span className="comment-time">{new Date(c.created_at).toLocaleString()}</span>
+            </div>
+            <div className="comment-body">{c.body}</div>
+          </div>
+        ))}
+      </div>
+      <form
+        className="comment-form"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          if (!newComment.trim()) return;
+          const res = await fetch(`/api/issues/${id}/comments`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ body: newComment }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setComments((prev) => [...prev, data.comment]);
+            setNewComment("");
+          }
+        }}
+      >
+        <input
+          placeholder="Add a note..."
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          autoComplete="off"
+        />
+        <button className="go" type="submit" disabled={!newComment.trim()}>Add</button>
+      </form>
 
       <div style={{ marginTop: 24, display: "flex", gap: 12 }}>
         <Link href="/issues" className="chip">Back to issues</Link>
