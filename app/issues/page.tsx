@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { IssueCreate } from "@/components/IssueCreate";
 import { IssueTable } from "@/components/IssueTable";
+import { SearchInput } from "@/components/SearchInput";
 import type { Issue, IssueStatus, Product } from "@/lib/types";
 
 export default function IssuesPage() {
@@ -11,6 +12,7 @@ export default function IssuesPage() {
   const [productFilter, setProductFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<IssueStatus | "all">("all");
   const [assigneeFilter, setAssigneeFilter] = useState<"all" | "user" | "agent">("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch("/api/issues")
@@ -27,9 +29,16 @@ export default function IssuesPage() {
         if (productFilter !== "all" && i.product_id !== productFilter) return false;
         if (statusFilter !== "all" && i.status !== statusFilter) return false;
         if (assigneeFilter !== "all" && i.assignee_kind !== assigneeFilter) return false;
+        if (search) {
+          const q = search.toLowerCase();
+          const matchTitle = i.title.toLowerCase().includes(q);
+          const matchBody = i.body.toLowerCase().includes(q);
+          const matchAssignee = (i.assignee_user || i.agent_name || "").toLowerCase().includes(q);
+          if (!matchTitle && !matchBody && !matchAssignee) return false;
+        }
         return true;
       }),
-    [issues, productFilter, statusFilter, assigneeFilter]
+    [issues, productFilter, statusFilter, assigneeFilter, search]
   );
 
   const handleOptimistic = useCallback((issue: Issue) => {
@@ -50,6 +59,8 @@ export default function IssuesPage() {
       <p className="lede">
         Create lands instantly — before the network roundtrip. Agent rows show a cap.
       </p>
+
+      <SearchInput value={search} onChange={setSearch} />
 
       <IssueCreate
         products={products}

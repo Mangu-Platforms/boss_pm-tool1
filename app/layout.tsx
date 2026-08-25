@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
+import { KeyboardHelp } from "@/components/KeyboardHelp";
+import { KeyboardNav } from "@/components/KeyboardNav";
 
 export const metadata: Metadata = {
   title: "Boss PM — Mangu Platforms",
@@ -28,6 +30,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </header>
           {children}
         </div>
+        <KeyboardHelp />
+        <KeyboardNav />
       </body>
     </html>
   );
