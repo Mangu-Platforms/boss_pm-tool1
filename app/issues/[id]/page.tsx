@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { formatCap } from "@/lib/money";
-import type { Issue, Product } from "@/lib/types";
+import type { Issue, IssuePriority, Product } from "@/lib/types";
 
 const STATUSES = ["backlog", "open", "doing", "done", "cancelled"] as const;
+const PRIORITIES = ["critical", "high", "medium", "low"] as const;
 
 export default function IssueDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -37,6 +38,28 @@ export default function IssueDetailPage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "update failed");
+        return;
+      }
+      setIssue(data.issue);
+    } catch {
+      setError("Network error");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function setPriority(priority: IssuePriority) {
+    setSaving(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/issues/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priority }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -99,6 +122,24 @@ export default function IssueDetailPage() {
                 type="button"
               >
                 {s}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="detail-row">
+          <span className="detail-label">Priority</span>
+          <div className="status-selector">
+            {PRIORITIES.map((p) => (
+              <button
+                key={p}
+                className={`chip ${issue.priority === p ? "chip-active" : ""}`}
+                data-on={issue.priority === p}
+                onClick={() => setPriority(p)}
+                disabled={saving}
+                type="button"
+              >
+                {p}
               </button>
             ))}
           </div>
