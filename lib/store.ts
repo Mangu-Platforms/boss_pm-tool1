@@ -66,6 +66,7 @@ export function createIssue(input: CreateIssueInput): Issue {
     title: input.title.trim(),
     body: input.body?.trim() ?? "",
     status: "open",
+    priority: input.priority ?? "medium",
     assignee_kind: input.assignee_kind,
     assignee_user: input.assignee_kind === "user" ? input.assignee_user!.trim() : null,
     agent_name: input.assignee_kind === "agent" ? input.agent_name! : null,
@@ -82,7 +83,7 @@ export function getIssue(id: string): Issue | undefined {
   return mem().issues.find((i) => i.id === id);
 }
 
-export function updateIssue(id: string, updates: Partial<Pick<Issue, "status" | "title" | "body" | "due_on">>): Issue | null {
+export function updateIssue(id: string, updates: Partial<Pick<Issue, "status" | "title" | "body" | "due_on" | "priority">>): Issue | null {
   const m = mem();
   const idx = m.issues.findIndex((i) => i.id === id);
   if (idx < 0) return null;
@@ -91,6 +92,7 @@ export function updateIssue(id: string, updates: Partial<Pick<Issue, "status" | 
   if (updates.title !== undefined) issue.title = updates.title;
   if (updates.body !== undefined) issue.body = updates.body;
   if (updates.due_on !== undefined) issue.due_on = updates.due_on;
+  if (updates.priority !== undefined) issue.priority = updates.priority;
   issue.updated_at = new Date().toISOString();
   return issue;
 }

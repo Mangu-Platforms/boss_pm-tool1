@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { AgentName, CreateIssueInput, Issue, Product } from "@/lib/types";
+import type { AgentName, CreateIssueInput, Issue, IssuePriority, Product } from "@/lib/types";
 
 type Props = {
   products: Product[];
@@ -18,6 +18,7 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
   const [kind, setKind] = useState<"user" | "agent">("agent");
   const [user, setUser] = useState("operator");
   const [agent, setAgent] = useState<AgentName>("alice");
+  const [priority, setPriority] = useState<IssuePriority>("medium");
   const [cap, setCap] = useState("2.00");
   const [err, setErr] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -56,6 +57,7 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
       product_id: productId,
       title: trimmedTitle,
       body: body.trim() || undefined,
+      priority,
       assignee_kind: kind,
       assignee_user: kind === "user" ? user : null,
       agent_name: kind === "agent" ? agent : null,
@@ -69,6 +71,7 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
       title: trimmedTitle,
       body: body.trim(),
       status: "open",
+      priority,
       assignee_kind: kind,
       assignee_user: kind === "user" ? user : null,
       agent_name: kind === "agent" ? agent : null,
@@ -139,6 +142,15 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
                 {p.name}
               </option>
             ))}
+          </select>
+        </label>
+        <label>
+          <div className="hint">Priority</div>
+          <select value={priority} onChange={(e) => setPriority(e.target.value as IssuePriority)}>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
           </select>
         </label>
         <label>

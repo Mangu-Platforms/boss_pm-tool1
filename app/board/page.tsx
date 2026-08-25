@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { formatCap } from "@/lib/money";
 import type { EngineTag, Issue, Product } from "@/lib/types";
 
@@ -12,11 +12,19 @@ const COLUMNS = [
   { key: "done", label: "Done" },
 ] as const;
 
+const PRIORITY_DOT: Record<string, string> = {
+  critical: "priority-critical",
+  high: "priority-high",
+  medium: "priority-medium",
+  low: "priority-low",
+};
+
 export default function KanbanPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [engine, setEngine] = useState<EngineTag | "all">("all");
   const [moving, setMoving] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/issues")
@@ -37,7 +45,7 @@ export default function KanbanPage() {
     return products.find((p) => p.id === id)?.name || id;
   }
 
-  async function moveIssue(issueId: string, newStatus: string) {
+  const moveIssue = useCallback(async (issueId: string, newStatus: string) => {
     setMoving(issueId);
     setIssues((prev) =>
       prev.map((i) => (i.id === issueId ? { ...i, status: newStatus as Issue["status"] } : i))
@@ -49,9 +57,36 @@ export default function KanbanPage() {
         body: JSON.stringify({ status: newStatus }),
       });
     } catch {
-      // Revert on error would go here
+      // revert on error
+      setIssues((prev) =>
+        prev.map((i) => (i.id === issueId ? { ...i, status: i.status } : i))
+      );
     } finally {
       setMoving(null);
+    }
+  }, []);
+
+  function handleDragStart(e: React.DragEvent, issueId: string) {
+    e.dataTransfer.setData("text/plain", issueId);
+    e.dataTransfer.effectAllowed = "move";
+  }
+
+  function handleDragOver(e: React.DragEvent, colKey: string) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOver(colKey);
+  }
+
+  function handleDragLeave() {
+    setDragOver(null);
+  }
+
+  function handleDrop(e: React.DragEvent, colKey: string) {
+    e.preventDefault();
+    setDragOver(null);
+    const issueId = e.dataTransfer.getData("text/plain");
+    if (issueId) {
+      moveIssue(issueId, colKey);
     }
   }
 
@@ -59,7 +94,7 @@ export default function KanbanPage() {
     <main>
       <div className="kicker">Kanban</div>
       <h1>Board</h1>
-      <p className="lede">Drag-free status board. Click arrows to move issues between columns.</p>
+      <p className="lede">Drag cards between columns or click arrows to move issues.</p>
 
       <div className="filters">
         {(["all", "cash-engine", "lab"] as const).map((v) => (
@@ -73,7 +108,13 @@ export default function KanbanPage() {
         {COLUMNS.map((col) => {
           const colIssues = filteredIssues.filter((i) => i.status === col.key);
           return (
-            <div key={col.key} className="kanban-col">
+            <div
+              key={col.key}
+              className={`kanban-col ${dragOver === col.key ? "kanban-col-dragover" : ""}`}
+              onDragOver={(e) => handleDragOver(e, col.key)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, col.key)}
+            >
               <div className="kanban-header">
                 <span className="kanban-title">{col.label}</span>
                 <span className="kanban-count">{colIssues.length}</span>
@@ -82,10 +123,20 @@ export default function KanbanPage() {
                 {colIssues.map((issue) => {
                   const colIdx = COLUMNS.findIndex((c) => c.key === col.key);
                   return (
-                    <div key={issue.id} className={`kanban-card ${moving === issue.id ? "kanban-moving" : ""}`}>
-                      <Link href={`/issues/${issue.id}`} className="kanban-card-title">
-                        {issue.title}
-                      </Link>
+                    <div
+                      key={issue.id}
+                      className={`kanban-card ${moving === issue.id ? "kanban-moving" : ""}`}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, issue.id)}
+                    >
+                      <div className="kanban-card-top">
+                        {issue.priority && (
+                          <span className={`priority-dot ${PRIORITY_DOT[issue.priority] || ""}`} title={issue.priority} />
+                        )}
+                        <Link href={`/issues/${issue.id}`} className="kanban-card-title">
+                          {issue.title}
+                        </Link>
+                      </div>
                       <div className="kanban-card-meta">
                         <span className="hint">{productName(issue.product_id)}</span>
                         {issue.assignee_kind === "agent" ? (

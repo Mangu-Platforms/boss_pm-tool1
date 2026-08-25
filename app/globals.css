@@ -130,7 +130,7 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 }
 .composer textarea { resize: vertical; min-height: 44px; }
 .composer input:focus, .composer select:focus, .composer textarea:focus { border-color: var(--gold-dim); }
-.row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: end; }
+.row { display: grid; grid-template-columns: 1fr auto 1fr 1fr auto; gap: 8px; align-items: end; }
 .go {
   background: var(--gold); color: var(--ink); border: 0; border-radius: 8px;
   padding: 10px 14px; font-weight: 600; cursor: pointer; transition: opacity 0.15s;
@@ -193,6 +193,28 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .kanban-arrow { background: var(--ink-2); border: 1px solid var(--line); border-radius: 4px; padding: 2px 8px; cursor: pointer; font-size: 12px; color: var(--paper-dim); transition: all 0.15s; }
 .kanban-arrow:hover { border-color: var(--gold-dim); color: var(--gold); }
 .kanban-moving { opacity: 0.5; }
+.kanban-col-dragover { border-color: var(--gold-dim); background: rgba(226, 182, 87, 0.03); }
+.kanban-card[draggable="true"] { cursor: grab; }
+.kanban-card[draggable="true"]:active { cursor: grabbing; }
+.kanban-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+
+/* Priority indicators */
+.priority-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.priority-critical { background: var(--danger); box-shadow: 0 0 4px var(--danger); }
+.priority-high { background: var(--gold); }
+.priority-medium { background: var(--mute); }
+.priority-low { background: var(--line-hover); }
+
+.priority-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  padding: 2px 6px; border-radius: 4px; letter-spacing: 0.05em;
+}
+.priority-badge-critical { background: rgba(255, 122, 110, 0.15); color: var(--danger); }
+.priority-badge-high { background: rgba(226, 182, 87, 0.15); color: var(--gold); }
+.priority-badge-medium { background: rgba(138, 131, 118, 0.15); color: var(--mute); }
+.priority-badge-low { background: rgba(61, 56, 46, 0.15); color: var(--line-hover); }
 
 /* Detail page */
 .detail-grid { display: grid; gap: 16px; margin: 20px 0; }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { formatCap } from "@/lib/money";
 import { dueLabel } from "@/lib/dates";
+import { PriorityBadge } from "./PriorityBadge";
 import type { Issue, Product } from "@/lib/types";
 
 type Props = {
@@ -30,6 +31,7 @@ export function IssueTable({ issues, products, showProduct = true }: Props) {
           <tr>
             <th>Title</th>
             {showProduct && <th>Product</th>}
+            <th>Priority</th>
             <th>Status</th>
             <th>Assignee</th>
             <th>Cap</th>
@@ -56,6 +58,7 @@ export function IssueTable({ issues, products, showProduct = true }: Props) {
                     </Link>
                   </td>
                 )}
+                <td><PriorityBadge priority={i.priority} /></td>
                 <td>
                   <span className={`status ${i.status}`}>{i.status}</span>
                 </td>
