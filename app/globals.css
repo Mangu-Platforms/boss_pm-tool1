@@ -130,7 +130,7 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 }
 .composer textarea { resize: vertical; min-height: 44px; }
 .composer input:focus, .composer select:focus, .composer textarea:focus { border-color: var(--gold-dim); }
-.row { display: grid; grid-template-columns: 1fr auto 1fr 1fr auto; gap: 8px; align-items: end; }
+.row { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) auto; gap: 8px; align-items: end; }
 .go {
   background: var(--gold); color: var(--ink); border: 0; border-radius: 8px;
   padding: 10px 14px; font-weight: 600; cursor: pointer; transition: opacity 0.15s;
@@ -346,6 +346,21 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 
 /* Export row */
 .export-row { display: flex; gap: 10px; margin-top: 8px; }
+
+/* Skeleton loading */
+.skeleton-wrap { display: flex; flex-direction: column; gap: 10px; padding: 16px 0; }
+.skeleton-line {
+  height: 12px; background: var(--ink-3); border-radius: 4px;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.skeleton-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 12px;
+  padding: 18px; display: flex; flex-direction: column; gap: 10px;
+}
+.skeleton-table-row {
+  display: flex; gap: 16px; padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
 
 /* Empty state */
 .empty { color: var(--mute); font-size: 14px; font-style: italic; padding: 20px 0; }

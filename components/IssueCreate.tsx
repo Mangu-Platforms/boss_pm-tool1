@@ -20,6 +20,7 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
   const [agent, setAgent] = useState<AgentName>("alice");
   const [priority, setPriority] = useState<IssuePriority>("medium");
   const [cap, setCap] = useState("2.00");
+  const [dueOn, setDueOn] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -62,6 +63,7 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
       assignee_user: kind === "user" ? user : null,
       agent_name: kind === "agent" ? agent : null,
       cost_cap_cents: cents,
+      due_on: dueOn || null,
     };
 
     const now = new Date().toISOString();
@@ -76,7 +78,7 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
       assignee_user: kind === "user" ? user : null,
       agent_name: kind === "agent" ? agent : null,
       cost_cap_cents: cents,
-      due_on: null,
+      due_on: dueOn || null,
       created_at: now,
       updated_at: now,
       pending: true,
@@ -181,6 +183,14 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
             disabled={kind !== "agent"}
             onChange={(e) => setCap(e.target.value)}
             placeholder="2.00"
+          />
+        </label>
+        <label>
+          <div className="hint">Due date (optional)</div>
+          <input
+            type="date"
+            value={dueOn}
+            onChange={(e) => setDueOn(e.target.value)}
           />
         </label>
         <button className="go" disabled={submitting || !title.trim()} type="submit">
