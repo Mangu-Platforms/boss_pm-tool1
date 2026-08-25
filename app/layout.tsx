@@ -4,6 +4,8 @@ import { Nav } from "@/components/Nav";
 import { KeyboardHelp } from "@/components/KeyboardHelp";
 import { KeyboardNav } from "@/components/KeyboardNav";
 import { ToastContainer } from "@/components/Toast";
+import { QuickAdd } from "@/components/QuickAdd";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "Boss PM — Mangu Platforms",
@@ -28,12 +30,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <b>Boss PM</b>
             </div>
             <Nav />
+            <ThemeToggle />
           </header>
           {children}
         </div>
         <KeyboardHelp />
         <KeyboardNav />
         <ToastContainer />
+        <QuickAdd />
       </body>
     </html>
   );
