@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { AgentName, CreateIssueInput, Issue, IssuePriority, Product } from "@/lib/types";
 
+type Template = { id: string; name: string; title_prefix: string; body: string; priority: IssuePriority; assignee_kind: "user" | "agent"; agent_name?: string; cost_cap_cents?: number };
+
 type Props = {
   products: Product[];
   defaultProductId?: string;
@@ -23,12 +25,31 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
   const [dueOn, setDueOn] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [templates, setTemplates] = useState<Template[]>([]);
 
   useEffect(() => {
     if (!productId && (defaultProductId || products[0]?.id)) {
       setProductId(defaultProductId || products[0].id);
     }
   }, [products, defaultProductId, productId]);
+
+  useEffect(() => {
+    fetch("/api/templates").then((r) => r.json()).then((d) => setTemplates(d.templates || []));
+  }, []);
+
+  function applyTemplate(tmpl: Template) {
+    setTitle(tmpl.title_prefix);
+    setBody(tmpl.body);
+    setPriority(tmpl.priority);
+    if (tmpl.assignee_kind === "agent" && tmpl.agent_name) {
+      setKind("agent");
+      setAgent(tmpl.agent_name as AgentName);
+      setCap(((tmpl.cost_cap_cents || 400) / 100).toFixed(2));
+    } else {
+      setKind("user");
+    }
+    titleRef.current?.focus();
+  }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -122,6 +143,21 @@ export function IssueCreate({ products, defaultProductId, onCreated, onOptimisti
         <span className="kicker">Create issue · press C</span>
         {submitting && <span className="hint syncing">saving…</span>}
       </div>
+      {templates.length > 0 && (
+        <div className="template-row">
+          <span className="hint">Templates:</span>
+          {templates.map((t) => (
+            <button
+              key={t.id}
+              className="chip chip-sm"
+              type="button"
+              onClick={() => applyTemplate(t)}
+            >
+              {t.name}
+            </button>
+          ))}
+        </div>
+      )}
       <input
         ref={titleRef}
         placeholder="Issue title"

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { formatCap } from "@/lib/money";
+import { toast } from "@/components/Toast";
 import type { EngineTag, Issue, Product } from "@/lib/types";
 
 const COLUMNS = [
@@ -59,11 +60,12 @@ export default function KanbanPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
+      toast(`Moved to ${newStatus}`, "success");
     } catch {
-      // revert on error
       setIssues((prev) =>
         prev.map((i) => (i.id === issueId ? { ...i, status: i.status } : i))
       );
+      toast("Failed to move issue", "error");
     } finally {
       setMoving(null);
     }

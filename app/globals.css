@@ -498,6 +498,9 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .inline-edit-title { font-size: 1.8rem; font-weight: 700; }
 .inline-edit-body { font-size: 0.95rem; resize: vertical; }
 
+/* Templates */
+.template-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+
 /* Swimlanes */
 .swimlane-container { display: flex; flex-direction: column; gap: 20px; }
 .swimlane-row { border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
