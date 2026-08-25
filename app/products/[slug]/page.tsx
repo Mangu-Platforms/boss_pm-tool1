@@ -89,6 +89,21 @@ export default function ProductPage() {
         </div>
       </div>
 
+      <div className="product-status-bar">
+        {(["open", "doing", "backlog", "done", "cancelled"] as const).map((s) => {
+          const count = issues.filter((i) => i.status === s).length;
+          if (!count) return null;
+          return (
+            <div
+              key={s}
+              className={`product-status-segment product-status-${s}`}
+              style={{ flex: count }}
+              title={`${s}: ${count}`}
+            />
+          );
+        })}
+      </div>
+
       <IssueCreate
         products={products}
         defaultProductId={product.id}

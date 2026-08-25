@@ -113,7 +113,9 @@ export function getIssue(id: string): Issue | undefined {
   return mem().issues.find((i) => i.id === id);
 }
 
-export function updateIssue(id: string, updates: Partial<Pick<Issue, "status" | "title" | "body" | "due_on" | "priority">>): Issue | null {
+type IssueUpdates = Partial<Pick<Issue, "status" | "title" | "body" | "due_on" | "priority" | "assignee_kind" | "assignee_user" | "agent_name" | "cost_cap_cents">>;
+
+export function updateIssue(id: string, updates: IssueUpdates): Issue | null {
   const m = mem();
   const idx = m.issues.findIndex((i) => i.id === id);
   if (idx < 0) return null;
@@ -123,6 +125,18 @@ export function updateIssue(id: string, updates: Partial<Pick<Issue, "status" | 
   if (updates.body !== undefined) issue.body = updates.body;
   if (updates.due_on !== undefined) issue.due_on = updates.due_on;
   if (updates.priority !== undefined) issue.priority = updates.priority;
+  if (updates.assignee_kind !== undefined) {
+    issue.assignee_kind = updates.assignee_kind;
+    if (updates.assignee_kind === "agent") {
+      issue.agent_name = updates.agent_name ?? issue.agent_name;
+      issue.cost_cap_cents = updates.cost_cap_cents ?? issue.cost_cap_cents;
+      issue.assignee_user = null;
+    } else {
+      issue.assignee_user = updates.assignee_user ?? issue.assignee_user;
+      issue.agent_name = null;
+      issue.cost_cap_cents = null;
+    }
+  }
   issue.updated_at = new Date().toISOString();
   return issue;
 }

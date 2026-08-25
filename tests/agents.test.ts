@@ -29,7 +29,8 @@ describe("Agents aggregation", () => {
 
     const totalCap = agentIssues.reduce((acc, i) => acc + (i.cost_cap_cents || 0), 0);
     expect(totalCap).toBeGreaterThan(0);
-    expect(totalCap).toBe(800 + 400 + 300); // from seed: alice=800, swarm=400+300
+    // Sum of all agent cost caps: alice=800+600+500, swarm=400+300+1200
+    expect(totalCap).toBe(800 + 600 + 500 + 400 + 300 + 1200);
   });
 
   it("separates active from done counts", async () => {

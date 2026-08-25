@@ -122,7 +122,7 @@ export async function dbCreateIssue(input: CreateIssueInput): Promise<Issue> {
 
 export async function dbUpdateIssue(
   id: string,
-  updates: Partial<Pick<Issue, "status" | "title" | "body" | "due_on" | "priority">>
+  updates: Partial<Pick<Issue, "status" | "title" | "body" | "due_on" | "priority" | "assignee_kind" | "assignee_user" | "agent_name" | "cost_cap_cents">>
 ): Promise<Issue | null> {
   const client = sb();
   if (!client) return memUpdate(id, updates);

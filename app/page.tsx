@@ -4,9 +4,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { EngineTag, Issue, Product } from "@/lib/types";
 
+type ActivityItem = { id: string; action: string; detail: string; created_at: string };
+
 export default function BoardPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [issues, setIssues] = useState<Issue[]>([]);
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [engine, setEngine] = useState<EngineTag | "all">("all");
 
   useEffect(() => {
@@ -16,6 +19,9 @@ export default function BoardPage() {
         setProducts(data.products || []);
         setIssues(data.issues || []);
       });
+    fetch("/api/activity?limit=5")
+      .then((r) => r.json())
+      .then((data) => setActivity(data.events || []));
   }, []);
 
   const shown = useMemo(
@@ -108,6 +114,24 @@ export default function BoardPage() {
           </Link>
         ))}
       </div>
+
+      {activity.length > 0 && (
+        <div className="home-activity">
+          <div className="home-activity-header">
+            <h2 className="section-title">Recent activity</h2>
+            <Link href="/activity" className="chip chip-sm">View all</Link>
+          </div>
+          <div className="home-activity-list">
+            {activity.map((a) => (
+              <div key={a.id} className="home-activity-item">
+                <span className="home-activity-action">{a.action}</span>
+                <span className="home-activity-detail">{a.detail}</span>
+                <span className="home-activity-time">{new Date(a.created_at).toLocaleTimeString()}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

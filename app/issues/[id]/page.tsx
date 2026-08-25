@@ -242,22 +242,57 @@ export default function IssueDetailPage() {
 
         <div className="detail-row">
           <span className="detail-label">Assignee</span>
-          <span>
+          <div className="assignee-editor">
+            <div className="status-selector">
+              <button
+                className="chip"
+                data-on={issue.assignee_kind === "user"}
+                onClick={async () => {
+                  if (issue.assignee_kind === "user") return;
+                  setSaving(true);
+                  const res = await fetch(`/api/issues/${id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ assignee_kind: "user", assignee_user: "operator" }),
+                  });
+                  if (res.ok) setIssue((await res.json()).issue);
+                  setSaving(false);
+                }}
+                disabled={saving}
+                type="button"
+              >
+                user
+              </button>
+              <button
+                className="chip"
+                data-on={issue.assignee_kind === "agent"}
+                onClick={async () => {
+                  if (issue.assignee_kind === "agent") return;
+                  setSaving(true);
+                  const res = await fetch(`/api/issues/${id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ assignee_kind: "agent", agent_name: "alice", cost_cap_cents: 400 }),
+                  });
+                  if (res.ok) setIssue((await res.json()).issue);
+                  setSaving(false);
+                }}
+                disabled={saving}
+                type="button"
+              >
+                agent
+              </button>
+            </div>
             {issue.assignee_kind === "agent" ? (
-              <span className="agent-badge">{issue.agent_name}</span>
+              <span className="assignee-detail">
+                <span className="agent-badge">{issue.agent_name}</span>
+                <span className="cap-cell">{formatCap(issue.cost_cap_cents)}</span>
+              </span>
             ) : (
-              issue.assignee_user
+              <span className="assignee-detail">{issue.assignee_user}</span>
             )}
-            <span className="hint" style={{ marginLeft: 8 }}>({issue.assignee_kind})</span>
-          </span>
-        </div>
-
-        {issue.assignee_kind === "agent" && (
-          <div className="detail-row">
-            <span className="detail-label">Cost cap</span>
-            <span className="cap-cell">{formatCap(issue.cost_cap_cents)}</span>
           </div>
-        )}
+        </div>
 
         <div className="detail-row">
           <span className="detail-label">Product</span>
