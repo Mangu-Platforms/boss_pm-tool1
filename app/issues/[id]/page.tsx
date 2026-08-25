@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { formatCap } from "@/lib/money";
+import { recordView } from "@/components/RecentlyViewed";
 import type { Comment } from "@/lib/comments";
+import type { IssueRelation } from "@/lib/relations";
 import type { Issue, IssueLink, IssuePriority, Product } from "@/lib/types";
 
 const STATUSES = ["backlog", "open", "doing", "done", "cancelled"] as const;
@@ -17,6 +19,10 @@ export default function IssueDetailPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [links, setLinks] = useState<IssueLink[]>([]);
+  const [relations, setRelations] = useState<IssueRelation[]>([]);
+  const [allIssues, setAllIssues] = useState<Issue[]>([]);
+  const [newRelationType, setNewRelationType] = useState<string>("relates-to");
+  const [newRelationTarget, setNewRelationTarget] = useState("");
   const [newComment, setNewComment] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,16 +32,21 @@ export default function IssueDetailPage() {
   const [bodyDraft, setBodyDraft] = useState("");
 
   const load = useCallback(async () => {
-    const [issueRes, productsRes, commentsRes, linksRes] = await Promise.all([
+    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, issuesRes] = await Promise.all([
       fetch(`/api/issues/${id}`).then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
       fetch(`/api/issues/${id}/comments`).then((r) => r.json()),
       fetch(`/api/issues/${id}/links`).then((r) => r.json()),
+      fetch(`/api/issues/${id}/relations`).then((r) => r.json()),
+      fetch("/api/issues").then((r) => r.json()),
     ]);
     setIssue(issueRes.issue || null);
     setProducts(productsRes.products || []);
     setComments(commentsRes.comments || []);
     setLinks(linksRes.links || []);
+    setRelations(relationsRes.relations || []);
+    setAllIssues(issuesRes.issues || []);
+    if (issueRes.issue) recordView(issueRes.issue.id, issueRes.issue.title);
   }, [id]);
 
   useEffect(() => {
@@ -386,6 +397,72 @@ export default function IssueDetailPage() {
           </div>
         </>
       )}
+
+      <div className="relations-section">
+        <h2 className="section-title">Relations</h2>
+        {relations.length > 0 && (
+          <div className="relations-list">
+            {relations.map((rel) => {
+              const otherId = rel.from_issue_id === id ? rel.to_issue_id : rel.from_issue_id;
+              const otherIssue = allIssues.find((i) => i.id === otherId);
+              const displayType = rel.from_issue_id === id ? rel.relation_type : (
+                rel.relation_type === "blocks" ? "blocked-by" :
+                rel.relation_type === "blocked-by" ? "blocks" :
+                rel.relation_type
+              );
+              return (
+                <div key={rel.id} className="relation-item">
+                  <span className="relation-type">{displayType}</span>
+                  <Link href={`/issues/${otherId}`} className="relation-title">
+                    {otherIssue?.title || otherId}
+                  </Link>
+                  <button
+                    className="relation-remove"
+                    type="button"
+                    onClick={async () => {
+                      await fetch(`/api/issues/${id}/relations?relation_id=${rel.id}`, { method: "DELETE" });
+                      setRelations((prev) => prev.filter((r) => r.id !== rel.id));
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        <form
+          className="relation-form"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (!newRelationTarget) return;
+            const res = await fetch(`/api/issues/${id}/relations`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ to_issue_id: newRelationTarget, relation_type: newRelationType }),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              setRelations((prev) => [...prev, data.relation]);
+              setNewRelationTarget("");
+            }
+          }}
+        >
+          <select value={newRelationType} onChange={(e) => setNewRelationType(e.target.value)}>
+            <option value="relates-to">relates to</option>
+            <option value="blocks">blocks</option>
+            <option value="blocked-by">blocked by</option>
+            <option value="duplicates">duplicates</option>
+          </select>
+          <select value={newRelationTarget} onChange={(e) => setNewRelationTarget(e.target.value)}>
+            <option value="">Select issue…</option>
+            {allIssues.filter((i) => i.id !== id).map((i) => (
+              <option key={i.id} value={i.id}>{i.title}</option>
+            ))}
+          </select>
+          <button className="go" type="submit" disabled={!newRelationTarget}>Link</button>
+        </form>
+      </div>
 
       <h2 className="section-title">Notes</h2>
       <div className="comments-list">

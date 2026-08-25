@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { IssueCreate } from "@/components/IssueCreate";
 import { IssueTable } from "@/components/IssueTable";
+import { RecentlyViewed } from "@/components/RecentlyViewed";
 import { SearchInput } from "@/components/SearchInput";
 import type { Issue, IssuePriority, IssueStatus, Product } from "@/lib/types";
 
@@ -76,6 +77,8 @@ export default function IssuesPage() {
       </p>
 
       <SearchInput value={search} onChange={setSearch} />
+
+      <RecentlyViewed />
 
       <IssueCreate
         products={products}

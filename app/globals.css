@@ -558,3 +558,22 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
   .nav { flex-wrap: wrap; gap: 10px; }
   .roadmap-item-meta { display: none; }
 }
+
+/* Recently viewed */
+.recently-viewed { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+
+/* Relations */
+.relations-section { margin-top: 24px; }
+.relations-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.relation-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+}
+.relation-type { font-family: var(--mono); font-size: 11px; color: var(--lab); text-transform: uppercase; min-width: 80px; }
+.relation-title { flex: 1; color: var(--paper-dim); }
+.relation-title:hover { color: var(--gold); }
+.relation-remove { background: none; border: none; color: var(--mute); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; }
+.relation-remove:hover { color: var(--danger); background: var(--ink-3); }
+.relation-form { display: flex; gap: 8px; align-items: center; }
+.relation-form select { background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 13px; }
+.relation-form input { flex: 1; }
