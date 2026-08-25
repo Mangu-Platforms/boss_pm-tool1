@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
-import { listProducts, listIssues, listLinks } from "@/lib/store";
+import { dbListProducts, dbListIssues, dbListLinks } from "@/lib/db";
 
 export async function GET() {
-  const products = listProducts();
-  const issues = listIssues();
-  const links = listLinks();
+  const [products, issues, links] = await Promise.all([
+    dbListProducts(),
+    dbListIssues(),
+    dbListLinks(),
+  ]);
 
   const cashEngineProducts = products.filter((p) => p.engine_tag === "cash-engine");
   const labProducts = products.filter((p) => p.engine_tag === "lab");

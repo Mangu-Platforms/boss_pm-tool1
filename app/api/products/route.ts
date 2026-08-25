@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { listProducts } from "@/lib/store";
+import { dbListProducts } from "@/lib/db";
 
 export async function GET() {
-  return NextResponse.json({ products: listProducts() });
+  const products = await dbListProducts();
+  return NextResponse.json({ products });
 }
