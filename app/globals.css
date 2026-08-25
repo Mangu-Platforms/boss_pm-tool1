@@ -63,6 +63,7 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .chip:hover { border-color: var(--line-hover); color: var(--paper); }
 .chip[data-on="true"] { border-color: var(--gold-dim); color: var(--gold); background: rgba(226, 182, 87, 0.05); }
 .chip:disabled { opacity: 0.5; cursor: wait; }
+.chip-sm { padding: 3px 8px; font-size: 11px; }
 
 /* Grid */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
@@ -109,7 +110,7 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .cap-cell { font-family: var(--mono); font-size: 12px; }
 .product-link { color: var(--paper-dim); }
 .product-link:hover { color: var(--gold); }
-.issue-count-bar { margin-bottom: 8px; }
+.issue-count-bar { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .table-wrap { overflow-x: auto; }
 .due-overdue { color: var(--danger); font-family: var(--mono); font-size: 12px; font-weight: 500; }
 .due-soon { color: var(--gold); font-family: var(--mono); font-size: 12px; }
