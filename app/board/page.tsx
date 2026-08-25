@@ -19,12 +19,15 @@ const PRIORITY_DOT: Record<string, string> = {
   low: "priority-low",
 };
 
+type Swimlane = "none" | "product" | "assignee";
+
 export default function KanbanPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [engine, setEngine] = useState<EngineTag | "all">("all");
   const [moving, setMoving] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState<string | null>(null);
+  const [swimlane, setSwimlane] = useState<Swimlane>("none");
 
   useEffect(() => {
     fetch("/api/issues")
@@ -90,6 +93,28 @@ export default function KanbanPage() {
     }
   }
 
+  function getSwimlanes(): { key: string; label: string; issues: Issue[] }[] {
+    if (swimlane === "product") {
+      const groups: Record<string, Issue[]> = {};
+      for (const issue of filteredIssues) {
+        const name = productName(issue.product_id);
+        if (!groups[name]) groups[name] = [];
+        groups[name].push(issue);
+      }
+      return Object.entries(groups).map(([name, iss]) => ({ key: name, label: name, issues: iss }));
+    }
+    if (swimlane === "assignee") {
+      const groups: Record<string, Issue[]> = {};
+      for (const issue of filteredIssues) {
+        const name = issue.assignee_kind === "agent" ? `agent:${issue.agent_name}` : (issue.assignee_user || "unassigned");
+        if (!groups[name]) groups[name] = [];
+        groups[name].push(issue);
+      }
+      return Object.entries(groups).map(([name, iss]) => ({ key: name, label: name, issues: iss }));
+    }
+    return [];
+  }
+
   return (
     <main>
       <div className="kicker">Kanban</div>
@@ -102,9 +127,58 @@ export default function KanbanPage() {
             {v}
           </button>
         ))}
+        <span className="filter-sep">|</span>
+        <span className="hint">Swim:</span>
+        {(["none", "product", "assignee"] as const).map((s) => (
+          <button key={s} className="chip chip-sm" data-on={swimlane === s} onClick={() => setSwimlane(s)}>
+            {s}
+          </button>
+        ))}
       </div>
 
-      <div className="kanban">
+      {swimlane !== "none" && (
+        <div className="swimlane-container">
+          {getSwimlanes().map((lane) => (
+            <div key={lane.key} className="swimlane-row">
+              <div className="swimlane-label">{lane.label}</div>
+              <div className="kanban">
+                {COLUMNS.map((col) => {
+                  const colIssues = lane.issues.filter((i) => i.status === col.key);
+                  return (
+                    <div
+                      key={col.key}
+                      className={`kanban-col kanban-col-compact ${dragOver === `${lane.key}-${col.key}` ? "kanban-col-dragover" : ""}`}
+                      onDragOver={(e) => { e.preventDefault(); setDragOver(`${lane.key}-${col.key}`); }}
+                      onDragLeave={() => setDragOver(null)}
+                      onDrop={(e) => { e.preventDefault(); setDragOver(null); const id = e.dataTransfer.getData("text/plain"); if (id) moveIssue(id, col.key); }}
+                    >
+                      <div className="kanban-header">
+                        <span className="kanban-count">{colIssues.length}</span>
+                      </div>
+                      <div className="kanban-cards">
+                        {colIssues.map((issue) => (
+                          <div
+                            key={issue.id}
+                            className="kanban-card kanban-card-mini"
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, issue.id)}
+                          >
+                            <Link href={`/issues/${issue.id}`} className="kanban-card-title">
+                              {issue.title}
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {swimlane === "none" && <div className="kanban">
         {COLUMNS.map((col) => {
           const colIssues = filteredIssues.filter((i) => i.status === col.key);
           return (
@@ -177,7 +251,7 @@ export default function KanbanPage() {
             </div>
           );
         })}
-      </div>
+      </div>}
     </main>
   );
 }

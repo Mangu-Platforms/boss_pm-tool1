@@ -10,8 +10,11 @@ type Stats = {
     agent_assigned: number;
     total_cap_cents: number;
     by_status: Record<string, number>;
+    by_priority: Record<string, number>;
+    by_assignee_kind: Record<string, number>;
   };
   github_links: number;
+  velocity: { done_count: number; avg_days_to_close: number | null };
 };
 
 export default function AnalyticsPage() {
@@ -27,6 +30,8 @@ export default function AnalyticsPage() {
 
   const capDollars = (stats.issues.total_cap_cents / 100).toFixed(2);
   const statuses = Object.entries(stats.issues.by_status);
+  const priorities = Object.entries(stats.issues.by_priority || {});
+  const assignees = Object.entries(stats.issues.by_assignee_kind || {});
 
   return (
     <main>
@@ -58,15 +63,18 @@ export default function AnalyticsPage() {
           <div className="analytics-big">${capDollars}</div>
           <div className="analytics-breakdown">
             <span>total committed cap</span>
-            <span>{stats.issues.agent_assigned} active agents</span>
+            <span>{stats.issues.agent_assigned} agents</span>
           </div>
         </div>
 
         <div className="analytics-card">
-          <h3>GitHub Links</h3>
-          <div className="analytics-big">{stats.github_links}</div>
+          <h3>Velocity</h3>
+          <div className="analytics-big">{stats.velocity?.done_count || 0}</div>
           <div className="analytics-breakdown">
-            <span>synced issues</span>
+            <span>completed</span>
+            {stats.velocity?.avg_days_to_close != null && (
+              <span>{stats.velocity.avg_days_to_close}d avg</span>
+            )}
           </div>
         </div>
       </div>
@@ -83,6 +91,32 @@ export default function AnalyticsPage() {
               />
             </div>
             <span className="status-bar-count">{count}</span>
+          </div>
+        ))}
+      </div>
+
+      <h2 className="section-title">Priority Breakdown</h2>
+      <div className="status-bars">
+        {priorities.map(([priority, count]) => (
+          <div key={priority} className="status-bar-row">
+            <span className="status-bar-label">{priority}</span>
+            <div className="status-bar-track">
+              <div
+                className={`status-bar-fill priority-bar-${priority}`}
+                style={{ width: `${stats.issues.total ? (count / stats.issues.total) * 100 : 0}%` }}
+              />
+            </div>
+            <span className="status-bar-count">{count}</span>
+          </div>
+        ))}
+      </div>
+
+      <h2 className="section-title">Assignee Split</h2>
+      <div className="assignee-split">
+        {assignees.map(([kind, count]) => (
+          <div key={kind} className="assignee-split-item">
+            <div className="assignee-split-bar" style={{ flex: count }} data-kind={kind} />
+            <span className="assignee-split-label">{kind}: {count}</span>
           </div>
         ))}
       </div>
