@@ -9,6 +9,9 @@ import {
   validateCreate,
   listLinks as memLinks,
   upsertLinks as memUpsertLinks,
+  getProduct as memGetProduct,
+  createProduct as memCreateProduct,
+  type CreateProductInput,
 } from "./store";
 import type { CreateIssueInput, Issue, IssueLink, Product } from "./types";
 
@@ -24,6 +27,39 @@ export async function dbListProducts(): Promise<Product[]> {
     .order("name");
   if (error || !data) return memProducts();
   return data as Product[];
+}
+
+export async function dbGetProduct(idOrSlug: string): Promise<Product | undefined> {
+  const client = sb();
+  if (!client) return memGetProduct(idOrSlug);
+  const { data } = await client
+    .from("products")
+    .select("*")
+    .or(`id.eq.${idOrSlug},slug.eq.${idOrSlug}`)
+    .limit(1)
+    .single();
+  if (data) return data as Product;
+  return memGetProduct(idOrSlug);
+}
+
+export async function dbCreateProduct(input: CreateProductInput): Promise<Product> {
+  const client = sb();
+  if (!client) return memCreateProduct(input);
+
+  const row = {
+    slug: input.slug.trim(),
+    name: input.name.trim(),
+    engine_tag: input.engine_tag,
+    github_owner: input.github_owner || "Mangu-Platforms",
+    github_repo: input.github_repo ?? null,
+    homepage: input.homepage ?? null,
+    money_note: input.money_note ?? null,
+    created_at: new Date().toISOString(),
+  };
+
+  const { data, error } = await client.from("products").insert(row).select().single();
+  if (error || !data) return memCreateProduct(input);
+  return data as Product;
 }
 
 export async function dbListIssues(productId?: string): Promise<Issue[]> {
@@ -67,6 +103,7 @@ export async function dbCreateIssue(input: CreateIssueInput): Promise<Issue> {
     title: input.title.trim(),
     body: input.body?.trim() ?? "",
     status: "open",
+    priority: input.priority ?? "medium",
     assignee_kind: input.assignee_kind,
     assignee_user: input.assignee_kind === "user" ? input.assignee_user!.trim() : null,
     agent_name: input.assignee_kind === "agent" ? input.agent_name! : null,
@@ -85,7 +122,7 @@ export async function dbCreateIssue(input: CreateIssueInput): Promise<Issue> {
 
 export async function dbUpdateIssue(
   id: string,
-  updates: Partial<Pick<Issue, "status" | "title" | "body" | "due_on">>
+  updates: Partial<Pick<Issue, "status" | "title" | "body" | "due_on" | "priority">>
 ): Promise<Issue | null> {
   const client = sb();
   if (!client) return memUpdate(id, updates);

@@ -24,6 +24,36 @@ export function listProducts(): Product[] {
   return mem().products.slice().sort((a, b) => a.name.localeCompare(b.name));
 }
 
+export type CreateProductInput = {
+  name: string;
+  slug: string;
+  engine_tag: "cash-engine" | "lab";
+  github_owner?: string;
+  github_repo?: string | null;
+  homepage?: string | null;
+  money_note?: string | null;
+};
+
+export function createProduct(input: CreateProductInput): Product {
+  if (!input.name?.trim()) throw new Error("name required");
+  if (!input.slug?.trim()) throw new Error("slug required");
+  if (mem().products.some((p) => p.slug === input.slug)) throw new Error("slug already exists");
+
+  const product: Product = {
+    id: crypto.randomUUID(),
+    slug: input.slug.trim(),
+    name: input.name.trim(),
+    engine_tag: input.engine_tag,
+    github_owner: input.github_owner || "Mangu-Platforms",
+    github_repo: input.github_repo ?? null,
+    homepage: input.homepage ?? null,
+    money_note: input.money_note ?? null,
+    created_at: new Date().toISOString(),
+  };
+  mem().products.push(product);
+  return product;
+}
+
 export function getProduct(slug: string): Product | undefined {
   return mem().products.find((p) => p.slug === slug || p.id === slug);
 }

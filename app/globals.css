@@ -320,6 +320,33 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 }
 .error-card button:hover { border-color: var(--gold); color: var(--gold); }
 
+/* Analytics */
+.analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 16px 0 28px; }
+.analytics-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 12px; padding: 18px;
+}
+.analytics-card h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mute); margin: 0 0 8px; }
+.analytics-big { font-size: 32px; font-weight: 600; font-family: var(--mono); color: var(--paper); margin-bottom: 6px; }
+.analytics-breakdown { display: flex; gap: 12px; font-size: 12px; color: var(--paper-dim); flex-wrap: wrap; }
+.analytics-breakdown .engine { color: var(--engine); }
+.analytics-breakdown .lab { color: var(--lab); }
+
+/* Status bars */
+.status-bars { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 24px; max-width: 500px; }
+.status-bar-row { display: flex; align-items: center; gap: 10px; }
+.status-bar-label { font-family: var(--mono); font-size: 11px; color: var(--paper-dim); min-width: 70px; text-transform: capitalize; }
+.status-bar-track { flex: 1; height: 8px; background: var(--ink-3); border-radius: 4px; overflow: hidden; }
+.status-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+.status-bar-open { background: var(--gold); }
+.status-bar-doing { background: var(--engine); }
+.status-bar-done { background: var(--paper-dim); }
+.status-bar-backlog { background: var(--mute); }
+.status-bar-cancelled { background: var(--danger); }
+.status-bar-count { font-family: var(--mono); font-size: 11px; color: var(--mute); min-width: 20px; }
+
+/* Export row */
+.export-row { display: flex; gap: 10px; margin-top: 8px; }
+
 /* Empty state */
 .empty { color: var(--mute); font-size: 14px; font-style: italic; padding: 20px 0; }
 

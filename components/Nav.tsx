@@ -7,6 +7,7 @@ const links = [
   { href: "/", label: "Portfolio" },
   { href: "/board", label: "Kanban" },
   { href: "/issues", label: "Issues" },
+  { href: "/analytics", label: "Analytics" },
   { href: "/activity", label: "Activity" },
   { href: "/settings", label: "Settings" },
 ];
