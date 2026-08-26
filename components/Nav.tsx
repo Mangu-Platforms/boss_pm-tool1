@@ -103,6 +103,8 @@ const links = [
   { href: "/error-budgets", label: "Error Budgets" },
   { href: "/capacity-forecasting", label: "Capacity Forecast" },
   { href: "/tech-debt", label: "Tech Debt" },
+  { href: "/api-health", label: "API Health" },
+  { href: "/team-agreements", label: "Team Agreements" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
