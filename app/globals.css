@@ -820,3 +820,26 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .attachment-icon { font-size: 16px; }
 .attachment-name { flex: 1; font-size: 13px; font-weight: 500; }
 .attachment-size { font-family: var(--mono); font-size: 11px; color: var(--mute); }
+
+/* Releases */
+.release-list { display: flex; flex-direction: column; gap: 16px; }
+.release-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px; transition: border-color 0.15s;
+}
+.release-card:hover { border-color: var(--line-hover); }
+.release-published { border-left: 3px solid var(--engine); }
+.release-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.release-version {
+  font-family: var(--mono); font-size: 13px; font-weight: 600;
+  background: var(--ink-3); padding: 2px 8px; border-radius: 4px; color: var(--gold);
+}
+.release-title { flex: 1; font-size: 15px; font-weight: 500; }
+.release-meta { display: flex; gap: 16px; margin-top: 8px; }
+.release-form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.release-form input, .release-form textarea {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.release-form input:focus, .release-form textarea:focus { border-color: var(--gold-dim); }
+.release-form textarea { resize: vertical; font-family: var(--mono); }
