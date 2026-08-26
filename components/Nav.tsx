@@ -93,6 +93,8 @@ const links = [
   { href: "/incident-tracker", label: "Incidents" },
   { href: "/feature-flags", label: "Feature Flags" },
   { href: "/ab-testing", label: "A/B Testing" },
+  { href: "/compliance-tracker", label: "Compliance" },
+  { href: "/knowledge-base", label: "Knowledge Base" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];

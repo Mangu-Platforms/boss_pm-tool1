@@ -2436,3 +2436,20 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .ab-results { display: flex; gap: 12px; font-size: 12px; padding-top: 8px; border-top: 1px solid var(--line); }
 .ab-sig { color: var(--engine); font-weight: 600; }
 .ab-not-sig { color: var(--mute); }
+
+/* Knowledge Base */
+.kb-search { margin-bottom: 14px; }
+.kb-search-input { width: 100%; background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 14px; }
+.kb-popular { margin-bottom: 16px; }
+.kb-popular h3 { font-size: 14px; margin-bottom: 8px; }
+.kb-pop-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+.kb-pop-card { background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; font-size: 13px; display: flex; justify-content: space-between; gap: 10px; min-width: 200px; flex: 1; }
+.kb-pop-title { font-weight: 600; }
+.kb-pop-views { color: var(--mute); font-size: 11px; }
+.kb-list { display: flex; flex-direction: column; gap: 8px; }
+.kb-article { background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+.kb-article-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.kb-article-title { font-weight: 700; font-size: 15px; }
+.kb-article-cat { font-size: 11px; background: var(--ink-3); padding: 2px 8px; border-radius: 4px; text-transform: capitalize; }
+.kb-article-excerpt { font-size: 13px; color: var(--mute); margin-bottom: 8px; }
+.kb-article-meta { display: flex; gap: 10px; font-size: 12px; color: var(--mute); align-items: center; flex-wrap: wrap; }
