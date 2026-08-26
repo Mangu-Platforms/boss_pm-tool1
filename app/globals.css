@@ -647,3 +647,18 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .label-remove { background: none; border: none; cursor: pointer; font-size: 12px; opacity: 0.6; padding: 0 2px; color: inherit; }
 .label-remove:hover { opacity: 1; }
 .label-select { background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; font-size: 12px; }
+
+/* Saved views */
+.saved-views { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+
+/* History */
+.history-list { display: flex; flex-direction: column; gap: 4px; }
+.history-entry {
+  display: flex; align-items: center; gap: 10px; padding: 4px 0;
+  font-size: 13px; border-bottom: 1px solid var(--line);
+}
+.history-field { font-family: var(--mono); font-size: 11px; color: var(--lab); min-width: 80px; }
+.history-old { color: var(--danger); text-decoration: line-through; }
+.history-new { color: var(--engine); }
+.history-arrow { color: var(--mute); }
+.history-time { color: var(--mute); font-size: 11px; margin-left: auto; }

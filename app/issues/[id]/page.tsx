@@ -9,6 +9,7 @@ import type { Comment } from "@/lib/comments";
 import type { IssueRelation } from "@/lib/relations";
 import type { Subtask } from "@/lib/subtasks";
 import type { TimeEntry } from "@/lib/timelog";
+import type { HistoryEntry } from "@/lib/history";
 import type { Label } from "@/lib/labels";
 import type { Issue, IssueLink, IssuePriority, Product } from "@/lib/types";
 
@@ -39,6 +40,7 @@ export default function IssueDetailPage() {
   const [timeNote, setTimeNote] = useState("");
   const [issueLabels, setIssueLabels] = useState<Label[]>([]);
   const [allLabels, setAllLabels] = useState<Label[]>([]);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [newRelationType, setNewRelationType] = useState<string>("relates-to");
   const [newRelationTarget, setNewRelationTarget] = useState("");
   const [newComment, setNewComment] = useState("");
@@ -50,7 +52,7 @@ export default function IssueDetailPage() {
   const [bodyDraft, setBodyDraft] = useState("");
 
   const load = useCallback(async () => {
-    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, subtasksRes, timeRes, labelsRes, allLabelsRes, issuesRes] = await Promise.all([
+    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, subtasksRes, timeRes, labelsRes, allLabelsRes, historyRes, issuesRes] = await Promise.all([
       fetch(`/api/issues/${id}`).then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
       fetch(`/api/issues/${id}/comments`).then((r) => r.json()),
@@ -60,6 +62,7 @@ export default function IssueDetailPage() {
       fetch(`/api/issues/${id}/time`).then((r) => r.json()),
       fetch(`/api/issues/${id}/labels`).then((r) => r.json()),
       fetch("/api/labels").then((r) => r.json()),
+      fetch(`/api/issues/${id}/history`).then((r) => r.json()),
       fetch("/api/issues").then((r) => r.json()),
     ]);
     setIssue(issueRes.issue || null);
@@ -72,6 +75,7 @@ export default function IssueDetailPage() {
     setTotalMins(timeRes.total_minutes || 0);
     setIssueLabels(labelsRes.labels || []);
     setAllLabels(allLabelsRes.labels || []);
+    setHistory(historyRes.history || []);
     setAllIssues(issuesRes.issues || []);
     if (issueRes.issue) recordView(issueRes.issue.id, issueRes.issue.title);
   }, [id]);
@@ -716,6 +720,23 @@ export default function IssueDetailPage() {
         />
         <button className="go" type="submit" disabled={!newComment.trim()}>Add</button>
       </form>
+
+      {history.length > 0 && (
+        <>
+          <h2 className="section-title">History</h2>
+          <div className="history-list">
+            {history.slice(0, 20).map((h) => (
+              <div key={h.id} className="history-entry">
+                <span className="history-field">{h.field}</span>
+                <span className="history-old">{h.old_value || "—"}</span>
+                <span className="history-arrow">→</span>
+                <span className="history-new">{h.new_value || "—"}</span>
+                <span className="history-time">{new Date(h.changed_at).toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       <div style={{ marginTop: 24, display: "flex", gap: 12 }}>
         <Link href="/issues" className="chip">Back to issues</Link>

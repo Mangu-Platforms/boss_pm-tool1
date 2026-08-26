@@ -6,6 +6,7 @@ import { IssueTable } from "@/components/IssueTable";
 import { RecentlyViewed } from "@/components/RecentlyViewed";
 import { SearchInput } from "@/components/SearchInput";
 import { toast } from "@/components/Toast";
+import type { SavedView } from "@/lib/views";
 import type { Issue, IssuePriority, IssueStatus, Product } from "@/lib/types";
 
 export default function IssuesPage() {
@@ -18,6 +19,7 @@ export default function IssuesPage() {
   const [sortBy, setSortBy] = useState<"created" | "priority" | "due">("created");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [savedViews, setSavedViews] = useState<SavedView[]>([]);
 
   useEffect(() => {
     fetch("/api/issues")
@@ -26,6 +28,9 @@ export default function IssuesPage() {
         setProducts(data.products || []);
         setIssues(data.issues || []);
       });
+    fetch("/api/views")
+      .then((r) => r.json())
+      .then((data) => setSavedViews(data.views || []));
   }, []);
 
   const PRIORITY_ORDER: Record<string, number> = { critical: 0, high: 1, medium: 2, low: 3 };
@@ -146,6 +151,32 @@ export default function IssuesPage() {
         onOptimistic={handleOptimistic}
         onCreated={handleCreated}
       />
+
+      {savedViews.length > 0 && (
+        <div className="saved-views">
+          <span className="hint">Views:</span>
+          {savedViews.map((v) => (
+            <button
+              key={v.id}
+              className="chip chip-sm"
+              onClick={() => {
+                if (v.filters.product) setProductFilter(v.filters.product);
+                else setProductFilter("all");
+                if (v.filters.status) setStatusFilter(v.filters.status as IssueStatus | "all");
+                else setStatusFilter("all");
+                if (v.filters.assignee) setAssigneeFilter(v.filters.assignee as "all" | "user" | "agent");
+                else setAssigneeFilter("all");
+                if (v.filters.priority) setPriorityFilter(v.filters.priority as IssuePriority | "all");
+                else setPriorityFilter("all");
+                if (v.sort) setSortBy(v.sort as "created" | "priority" | "due");
+                toast(`View: ${v.name}`);
+              }}
+            >
+              {v.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="filters">
         <button className="chip" data-on={productFilter === "all"} onClick={() => setProductFilter("all")}>
