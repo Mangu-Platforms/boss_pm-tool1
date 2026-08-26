@@ -97,6 +97,8 @@ const links = [
   { href: "/knowledge-base", label: "Knowledge Base" },
   { href: "/runbooks", label: "Runbooks" },
   { href: "/oncall-schedule", label: "On-Call" },
+  { href: "/sla-violations", label: "SLA Violations" },
+  { href: "/deployment-tracking", label: "Deployments" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
