@@ -48,6 +48,9 @@ const links = [
   { href: "/templates", label: "Templates" },
   { href: "/checklists", label: "Checklists" },
   { href: "/labels", label: "Labels" },
+  { href: "/priorities", label: "Priorities" },
+  { href: "/estimates", label: "Estimates" },
+  { href: "/webhooks", label: "Webhooks" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
