@@ -23,6 +23,8 @@ const links = [
   { href: "/sla", label: "SLA" },
   { href: "/releases", label: "Releases" },
   { href: "/changelog", label: "Changelog" },
+  { href: "/risks", label: "Risks" },
+  { href: "/retros", label: "Retros" },
   { href: "/tags", label: "Tags" },
   { href: "/views", label: "Views" },
   { href: "/integrations", label: "Integrations" },
