@@ -2185,3 +2185,12 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .ks-card-id { font-family: var(--mono); font-size: 10px; color: var(--lab); margin-bottom: 2px; }
 .ks-card-title { font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ks-card-meta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--mute); }
+
+/* Sprint Planning */
+.sp-stats { display: flex; gap: 16px; margin: 14px 0; }
+.sp-stat {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px 24px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.sp-stat-val { font-size: 28px; font-weight: 800; color: var(--gold); }
+.sp-stat-label { font-size: 12px; color: var(--mute); }
