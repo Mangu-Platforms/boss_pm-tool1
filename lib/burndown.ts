@@ -1,4 +1,4 @@
-import { issuesForSprint } from "./sprints";
+import { listSprints, issuesForSprint } from "./sprints";
 
 export type BurndownPoint = {
   date: string;
@@ -59,4 +59,11 @@ export function sprintVelocity(sprintId: string, doneIssueIds: string[]): { tota
   const doneSet = new Set(doneIssueIds);
   const completed = issueIds.filter((id) => doneSet.has(id)).length;
   return { total: issueIds.length, completed, velocity: completed };
+}
+
+export function burndownSummary(): { sprint_id: string; sprint_name: string; total_issues: number; done: number; pct: number }[] {
+  return listSprints().map((s) => {
+    const ids = issuesForSprint(s.id);
+    return { sprint_id: s.id, sprint_name: s.name, total_issues: ids.length, done: 0, pct: 0 };
+  });
 }
