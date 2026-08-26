@@ -91,6 +91,8 @@ const links = [
   { href: "/impact-analysis", label: "Impact Analysis" },
   { href: "/service-catalog", label: "Service Catalog" },
   { href: "/incident-tracker", label: "Incidents" },
+  { href: "/feature-flags", label: "Feature Flags" },
+  { href: "/ab-testing", label: "A/B Testing" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
