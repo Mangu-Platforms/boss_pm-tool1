@@ -89,6 +89,8 @@ const links = [
   { href: "/workstreams", label: "Workstreams" },
   { href: "/change-requests", label: "Change Requests" },
   { href: "/impact-analysis", label: "Impact Analysis" },
+  { href: "/service-catalog", label: "Service Catalog" },
+  { href: "/incident-tracker", label: "Incidents" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
