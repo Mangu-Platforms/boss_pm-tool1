@@ -768,3 +768,30 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .team-name { font-weight: 500; font-size: 14px; }
 .team-email { font-size: 12px; color: var(--mute); }
 .team-meta { display: flex; align-items: center; gap: 10px; }
+
+/* Automations */
+.auto-list { display: flex; flex-direction: column; gap: 10px; }
+.auto-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px; transition: border-color 0.15s;
+}
+.auto-card:hover { border-color: var(--line-hover); }
+.auto-disabled { opacity: 0.5; }
+.auto-header { display: flex; align-items: center; gap: 10px; }
+.auto-toggle {
+  width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--mute);
+  background: transparent; cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+}
+.auto-on { background: var(--engine); border-color: var(--engine); }
+.auto-name { flex: 1; font-weight: 500; font-size: 14px; }
+.auto-detail { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; font-size: 13px; }
+.auto-trigger { color: var(--gold); font-family: var(--mono); font-size: 12px; }
+.auto-cond { color: var(--paper-dim); }
+.auto-actions { color: var(--engine); font-family: var(--mono); font-size: 12px; }
+.auto-form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.auto-form input, .auto-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.auto-form input:focus, .auto-form select:focus { border-color: var(--gold-dim); }
+.auto-form-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }

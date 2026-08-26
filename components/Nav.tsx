@@ -16,6 +16,7 @@ const links = [
   { href: "/activity", label: "Activity" },
   { href: "/team", label: "Team" },
   { href: "/inbox", label: "Inbox" },
+  { href: "/automations", label: "Automations" },
   { href: "/settings", label: "Settings" },
 ];
 
