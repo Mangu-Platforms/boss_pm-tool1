@@ -99,6 +99,8 @@ const links = [
   { href: "/oncall-schedule", label: "On-Call" },
   { href: "/sla-violations", label: "SLA Violations" },
   { href: "/deployment-tracking", label: "Deployments" },
+  { href: "/post-mortems", label: "Post-Mortems" },
+  { href: "/error-budgets", label: "Error Budgets" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
