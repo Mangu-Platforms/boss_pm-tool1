@@ -105,6 +105,8 @@ const links = [
   { href: "/tech-debt", label: "Tech Debt" },
   { href: "/api-health", label: "API Health" },
   { href: "/team-agreements", label: "Team Agreements" },
+  { href: "/security-scanning", label: "Security Scans" },
+  { href: "/cost-allocation", label: "Cost Allocation" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
