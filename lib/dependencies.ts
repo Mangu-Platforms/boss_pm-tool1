@@ -8,7 +8,15 @@ export type Dependency = {
   created_at: string;
 };
 
-const store: Dependency[] = [];
+const store: Dependency[] = [
+  { id: "dep-1", source_id: "BOSS-1", target_id: "BOSS-2", type: "blocks", created_at: "2025-03-01T00:00:00.000Z" },
+  { id: "dep-2", source_id: "BOSS-3", target_id: "BOSS-1", type: "relates_to", created_at: "2025-03-02T00:00:00.000Z" },
+  { id: "dep-3", source_id: "BOSS-4", target_id: "BOSS-5", type: "blocked_by", created_at: "2025-03-03T00:00:00.000Z" },
+];
+
+export function listAllDependencies(): Dependency[] {
+  return [...store];
+}
 
 export function addDependency(sourceId: string, targetId: string, type: DependencyType): Dependency {
   const existing = store.find(

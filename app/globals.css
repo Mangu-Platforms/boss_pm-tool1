@@ -1476,3 +1476,71 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .timeline-diamond { width: 10px; height: 10px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
 .timeline-item-label { font-size: 11px; color: var(--paper-dim); max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
 .timeline-milestone { top: 0; }
+
+/* Dependencies */
+.dep-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.dep-card {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 14px;
+}
+.dep-source, .dep-target { font-size: 13px; font-weight: 600; }
+.dep-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+.dep-form input, .dep-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.dep-form input:focus { border-color: var(--gold-dim); }
+
+/* Time Entries */
+.te-filters { display: flex; gap: 10px; margin: 14px 0; align-items: center; }
+.te-filter-input {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 10px; color: var(--paper); font-size: 12px; outline: none;
+}
+.te-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.te-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 14px;
+}
+.te-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.te-issue { font-weight: 600; color: var(--lab); }
+.te-member { font-weight: 500; }
+.te-hours { font-weight: 700; color: var(--gold); font-family: var(--mono); }
+.te-desc { font-size: 13px; color: var(--paper-dim); margin: 4px 0 0; }
+.te-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+.te-form input {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.te-form input:focus { border-color: var(--gold-dim); }
+
+/* Environments */
+.env-list { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; }
+.env-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.env-active { border-left: 3px solid var(--engine); }
+.env-inactive { border-left: 3px solid var(--mute); }
+.env-deploying { border-left: 3px solid var(--gold); }
+.env-failed { border-left: 3px solid var(--danger); }
+.env-header { display: flex; align-items: center; gap: 10px; }
+.env-dot { width: 10px; height: 10px; border-radius: 50%; }
+.env-dot-active { background: var(--engine); }
+.env-dot-inactive { background: var(--mute); }
+.env-dot-deploying { background: var(--gold); }
+.env-dot-failed { background: var(--danger); }
+.env-name { font-size: 16px; font-weight: 600; flex: 1; }
+.env-details { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
+.env-actions { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.env-status-select {
+  background: var(--ink-3); border: 1px solid var(--line); border-radius: 6px;
+  padding: 4px 8px; color: var(--paper); font-size: 12px;
+}
+.env-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+.env-form input {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.env-form input:focus { border-color: var(--gold-dim); }

@@ -42,6 +42,9 @@ const links = [
   { href: "/status-page", label: "Status Page" },
   { href: "/custom-fields", label: "Custom Fields" },
   { href: "/timeline", label: "Timeline" },
+  { href: "/dependencies", label: "Dependencies" },
+  { href: "/time-entries", label: "Time Tracking" },
+  { href: "/environments", label: "Environments" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];

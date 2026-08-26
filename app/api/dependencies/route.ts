@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addDependency, removeDependency, getDependencies, getBlockers, getBlocking, getDependencyGraph, detectCycle } from "@/lib/dependencies";
+import { addDependency, removeDependency, getDependencies, getBlockers, getBlocking, getDependencyGraph, detectCycle, listAllDependencies } from "@/lib/dependencies";
 import type { DependencyType } from "@/lib/dependencies";
 
 export async function GET(req: Request) {
@@ -12,7 +12,7 @@ export async function GET(req: Request) {
   }
 
   if (!issueId) {
-    return NextResponse.json({ error: "issue_id required" }, { status: 400 });
+    return NextResponse.json({ dependencies: listAllDependencies() });
   }
 
   return NextResponse.json({

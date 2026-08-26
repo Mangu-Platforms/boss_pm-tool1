@@ -1,7 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { addDependency, removeDependency, getDependencies, getBlockers, getBlocking, isBlocked, getDependencyGraph, detectCycle } from "@/lib/dependencies";
+import { addDependency, removeDependency, getDependencies, getBlockers, getBlocking, isBlocked, getDependencyGraph, detectCycle, listAllDependencies } from "@/lib/dependencies";
 
 describe("dependencies", () => {
+  it("lists all dependencies including seeds", () => {
+    const deps = listAllDependencies();
+    expect(deps.length).toBeGreaterThanOrEqual(3);
+  });
+
   it("adds a dependency", () => {
     const dep = addDependency("iss-a", "iss-b", "blocks");
     expect(dep.source_id).toBe("iss-a");
