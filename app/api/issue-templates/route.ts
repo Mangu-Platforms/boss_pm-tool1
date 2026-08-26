@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { listIssueTemplates, getIssueTemplate, createIssueTemplate, deleteIssueTemplate } from "@/lib/issue-templates";
+import { listIssueTemplates, getIssueTemplate, createIssueTemplate, updateIssueTemplate, deleteIssueTemplate } from "@/lib/issue-templates";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -27,6 +27,11 @@ export async function POST(req: Request) {
     return deleteIssueTemplate(body.id)
       ? NextResponse.json({ ok: true })
       : NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  if (body.action === "update") {
+    const t = updateIssueTemplate(body.id, body.updates || {});
+    return t ? NextResponse.json({ template: t }) : NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   if (!body.name?.trim()) {

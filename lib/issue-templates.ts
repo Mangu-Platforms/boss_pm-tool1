@@ -90,6 +90,18 @@ export function createIssueTemplate(
   return template;
 }
 
+export function updateIssueTemplate(id: string, updates: Partial<Pick<IssueTemplate, "name" | "description" | "title_template" | "body_template" | "default_priority" | "default_labels">>): IssueTemplate | null {
+  const t = store.find((tpl) => tpl.id === id);
+  if (!t) return null;
+  if (updates.name !== undefined) t.name = updates.name;
+  if (updates.description !== undefined) t.description = updates.description;
+  if (updates.title_template !== undefined) t.title_template = updates.title_template;
+  if (updates.body_template !== undefined) t.body_template = updates.body_template;
+  if (updates.default_priority !== undefined) t.default_priority = updates.default_priority;
+  if (updates.default_labels !== undefined) t.default_labels = updates.default_labels;
+  return t;
+}
+
 export function deleteIssueTemplate(id: string): boolean {
   const idx = store.findIndex((t) => t.id === id);
   if (idx < 0) return false;
