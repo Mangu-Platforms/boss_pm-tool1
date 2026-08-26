@@ -701,3 +701,51 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
   padding: 9px 12px; color: var(--paper); outline: none; font-size: 13px;
 }
 .milestone-form input:focus { border-color: var(--gold-dim); }
+
+/* Custom field inputs */
+.cf-input {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px;
+  padding: 5px 10px; color: var(--paper); font-size: 13px; outline: none;
+  min-width: 140px;
+}
+.cf-input:focus { border-color: var(--gold-dim); }
+.cf-input::placeholder { color: var(--mute); }
+
+/* Markdown body */
+.md-body { font-size: 14px; line-height: 1.65; color: var(--paper-dim); }
+.md-body .md-p { margin: 0 0 8px; }
+.md-body .md-h { color: var(--paper); margin: 16px 0 6px; font-weight: 600; }
+.md-body h2.md-h { font-size: 1.2rem; }
+.md-body h3.md-h { font-size: 1.05rem; }
+.md-body h4.md-h { font-size: 0.95rem; }
+.md-body .md-code { font-family: var(--mono); background: var(--ink-3); padding: 2px 6px; border-radius: 3px; font-size: 0.88em; }
+.md-body .md-code-block {
+  font-family: var(--mono); background: var(--ink-3); border: 1px solid var(--line);
+  border-radius: 6px; padding: 12px 14px; overflow-x: auto; font-size: 0.85em; margin: 8px 0;
+}
+.md-body .md-ul { margin: 6px 0; padding-left: 20px; }
+.md-body .md-li { margin: 2px 0; }
+.md-body .md-quote {
+  border-left: 3px solid var(--gold-dim); padding-left: 12px; color: var(--mute);
+  font-style: italic; margin: 8px 0;
+}
+.md-body .md-hr { border: none; border-top: 1px solid var(--line); margin: 12px 0; }
+.md-body a { color: var(--gold); text-decoration: underline; }
+.md-body a:hover { color: var(--paper); }
+.md-body strong { font-weight: 600; color: var(--paper); }
+.md-body del { opacity: 0.5; }
+
+/* Sprints */
+.sprint-list { display: flex; flex-direction: column; gap: 14px; }
+.sprint-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px; transition: border-color 0.15s;
+}
+.sprint-card:hover { border-color: var(--line-hover); }
+.sprint-completed { opacity: 0.55; }
+.sprint-active { border-left: 3px solid var(--engine); }
+.sprint-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.sprint-name { font-size: 16px; font-weight: 500; }
+.sprint-goal { font-size: 13px; color: var(--paper-dim); margin: 4px 0 8px; }
+.sprint-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+.sprint-actions { margin-top: 8px; }

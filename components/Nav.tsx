@@ -11,6 +11,7 @@ const links = [
   { href: "/roadmap", label: "Roadmap" },
   { href: "/workload", label: "Workload" },
   { href: "/milestones", label: "Milestones" },
+  { href: "/sprints", label: "Sprints" },
   { href: "/analytics", label: "Analytics" },
   { href: "/activity", label: "Activity" },
   { href: "/inbox", label: "Inbox" },

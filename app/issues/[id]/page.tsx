@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { formatCap } from "@/lib/money";
+import { Markdown } from "@/components/Markdown";
 import { recordView } from "@/components/RecentlyViewed";
 import type { Comment } from "@/lib/comments";
 import type { IssueRelation } from "@/lib/relations";
@@ -11,6 +12,7 @@ import type { Subtask } from "@/lib/subtasks";
 import type { TimeEntry } from "@/lib/timelog";
 import type { HistoryEntry } from "@/lib/history";
 import type { Label } from "@/lib/labels";
+import type { CustomField } from "@/lib/custom-fields";
 import type { Issue, IssueLink, IssuePriority, Product } from "@/lib/types";
 
 const STATUSES = ["backlog", "open", "doing", "done", "cancelled"] as const;
@@ -41,6 +43,8 @@ export default function IssueDetailPage() {
   const [issueLabels, setIssueLabels] = useState<Label[]>([]);
   const [allLabels, setAllLabels] = useState<Label[]>([]);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [customFields, setCustomFields] = useState<CustomField[]>([]);
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [newRelationType, setNewRelationType] = useState<string>("relates-to");
   const [newRelationTarget, setNewRelationTarget] = useState("");
   const [newComment, setNewComment] = useState("");
@@ -52,7 +56,7 @@ export default function IssueDetailPage() {
   const [bodyDraft, setBodyDraft] = useState("");
 
   const load = useCallback(async () => {
-    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, subtasksRes, timeRes, labelsRes, allLabelsRes, historyRes, issuesRes] = await Promise.all([
+    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, subtasksRes, timeRes, labelsRes, allLabelsRes, historyRes, issuesRes, fieldsRes, fieldValsRes] = await Promise.all([
       fetch(`/api/issues/${id}`).then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
       fetch(`/api/issues/${id}/comments`).then((r) => r.json()),
@@ -64,6 +68,8 @@ export default function IssueDetailPage() {
       fetch("/api/labels").then((r) => r.json()),
       fetch(`/api/issues/${id}/history`).then((r) => r.json()),
       fetch("/api/issues").then((r) => r.json()),
+      fetch("/api/custom-fields").then((r) => r.json()),
+      fetch(`/api/issues/${id}/fields`).then((r) => r.json()),
     ]);
     setIssue(issueRes.issue || null);
     setProducts(productsRes.products || []);
@@ -77,6 +83,8 @@ export default function IssueDetailPage() {
     setAllLabels(allLabelsRes.labels || []);
     setHistory(historyRes.history || []);
     setAllIssues(issuesRes.issues || []);
+    setCustomFields(fieldsRes.fields || []);
+    setFieldValues(fieldValsRes.values || {});
     if (issueRes.issue) recordView(issueRes.issue.id, issueRes.issue.title);
   }, [id]);
 
@@ -237,12 +245,12 @@ export default function IssueDetailPage() {
           <span className="hint">Cmd+Enter to save, Esc to cancel</span>
         </div>
       ) : (
-        <p
-          className="lede editable-body"
+        <div
+          className="editable-body"
           onClick={() => { setBodyDraft(issue.body); setEditingBody(true); }}
         >
-          {issue.body || <span className="hint">Click to add description…</span>}
-        </p>
+          {issue.body ? <Markdown text={issue.body} /> : <span className="hint">Click to add description…</span>}
+        </div>
       )}
 
       <div className="detail-grid">
@@ -444,6 +452,56 @@ export default function IssueDetailPage() {
             )}
           </span>
         </div>
+
+        {customFields.map((cf) => (
+          <div key={cf.id} className="detail-row">
+            <span className="detail-label">{cf.name}</span>
+            <span>
+              {cf.type === "select" && cf.options ? (
+                <select
+                  className="label-select"
+                  value={fieldValues[cf.id] || ""}
+                  onChange={async (e) => {
+                    const val = e.target.value;
+                    const newVals = { ...fieldValues };
+                    if (val) {
+                      newVals[cf.id] = val;
+                    } else {
+                      delete newVals[cf.id];
+                    }
+                    setFieldValues(newVals);
+                    await fetch(`/api/issues/${id}/fields`, {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ field_id: cf.id, value: val || null }),
+                    });
+                  }}
+                >
+                  <option value="">—</option>
+                  {cf.options.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  className="cf-input"
+                  type={cf.type === "number" ? "number" : cf.type === "date" ? "date" : cf.type === "url" ? "url" : "text"}
+                  placeholder={`Set ${cf.name.toLowerCase()}…`}
+                  value={fieldValues[cf.id] || ""}
+                  onChange={(e) => setFieldValues({ ...fieldValues, [cf.id]: e.target.value })}
+                  onBlur={async (e) => {
+                    const val = e.target.value;
+                    await fetch(`/api/issues/${id}/fields`, {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ field_id: cf.id, value: val || null }),
+                    });
+                  }}
+                />
+              )}
+            </span>
+          </div>
+        ))}
 
         <div className="detail-row">
           <span className="detail-label">Created</span>
