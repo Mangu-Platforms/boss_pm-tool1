@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
+import { search } from "../lib/search";
 
 beforeEach(() => {
   const g = globalThis as typeof globalThis & { __boss?: unknown };
@@ -73,5 +74,29 @@ describe("Duplicate detection", () => {
       .sort((a, b) => b.score - a.score);
     expect(candidates.length).toBeGreaterThanOrEqual(1);
     expect(candidates[0].issue.title).toContain("GitHub");
+  });
+});
+
+describe("search module", () => {
+  it("returns empty for blank query", () => {
+    expect(search("")).toEqual([]);
+  });
+
+  it("finds results across types", () => {
+    const results = search("boss");
+    expect(results.length).toBeGreaterThan(0);
+  });
+
+  it("filters by type", () => {
+    const results = search("boss", ["product"]);
+    expect(results.every((r) => r.type === "product")).toBe(true);
+  });
+
+  it("includes match_field and snippet", () => {
+    const results = search("boss");
+    for (const r of results) {
+      expect(r.match_field).toBeDefined();
+      expect(r.snippet.length).toBeGreaterThan(0);
+    }
   });
 });

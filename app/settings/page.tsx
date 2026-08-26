@@ -2,11 +2,21 @@
 
 import { useEffect, useState } from "react";
 
+type Setting = {
+  key: string;
+  category: string;
+  label: string;
+  value: string;
+  type: "text" | "boolean" | "select" | "number";
+  options?: string[];
+};
+
 type Config = {
   supabase_connected: boolean;
   github_connected: boolean;
   github_owner: string | null;
   product_count: number;
+  settings?: Setting[];
 };
 
 type HealthInfo = {
@@ -21,14 +31,27 @@ export default function SettingsPage() {
   const [config, setConfig] = useState<Config | null>(null);
   const [health, setHealth] = useState<HealthInfo | null>(null);
 
-  useEffect(() => {
+  function loadConfig() {
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data) => setConfig(data));
+  }
+
+  useEffect(() => {
+    loadConfig();
     fetch("/api/health")
       .then((r) => r.json())
       .then((data) => setHealth(data));
   }, []);
+
+  async function updateSetting(key: string, value: string) {
+    await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "update", key, value }),
+    });
+    loadConfig();
+  }
 
   return (
     <main>
@@ -98,6 +121,34 @@ export default function SettingsPage() {
               Set <code>GITHUB_WEBHOOK_SECRET</code> for signature verification.
             </p>
           </div>
+
+          {config.settings && config.settings.length > 0 && (
+            <div className="settings-section">
+              <h2>Preferences</h2>
+              {config.settings.map((s) => (
+                <div key={s.key} className="settings-row">
+                  <span>{s.label}</span>
+                  {s.type === "boolean" ? (
+                    <button
+                      className={`btn-sm ${s.value === "true" ? "btn-active" : ""}`}
+                      onClick={() => updateSetting(s.key, s.value === "true" ? "false" : "true")}
+                    >{s.value === "true" ? "On" : "Off"}</button>
+                  ) : s.type === "select" && s.options ? (
+                    <select value={s.value} onChange={(e) => updateSetting(s.key, e.target.value)}>
+                      {s.options.map((o) => <option key={o} value={o}>{o}</option>)}
+                    </select>
+                  ) : (
+                    <input
+                      type={s.type === "number" ? "number" : "text"}
+                      value={s.value}
+                      onBlur={(e) => { if (e.target.value !== s.value) updateSetting(s.key, e.target.value); }}
+                      onChange={() => {}}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="settings-section">
             <h2>Keyboard Shortcuts</h2>

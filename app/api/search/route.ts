@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { dbListIssues, dbListProducts } from "@/lib/db";
+import { listMilestones } from "@/lib/milestones";
+import { listEpics } from "@/lib/epics";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -18,5 +20,15 @@ export async function GET(req: Request) {
     .slice(0, 10)
     .map((i) => ({ type: "issue" as const, id: i.id, title: i.title, status: i.status, url: `/issues/${i.id}` }));
 
-  return NextResponse.json({ results: [...matchedProducts, ...matchedIssues] });
+  const matchedMilestones = listMilestones()
+    .filter((m) => m.name.toLowerCase().includes(q) || m.description.toLowerCase().includes(q))
+    .slice(0, 5)
+    .map((m) => ({ type: "milestone" as const, id: m.id, title: m.name, status: m.status, url: `/milestones` }));
+
+  const matchedEpics = listEpics()
+    .filter((e) => e.name.toLowerCase().includes(q) || e.description.toLowerCase().includes(q))
+    .slice(0, 5)
+    .map((e) => ({ type: "epic" as const, id: e.id, title: e.name, status: e.status, url: `/epics` }));
+
+  return NextResponse.json({ results: [...matchedProducts, ...matchedIssues, ...matchedMilestones, ...matchedEpics] });
 }

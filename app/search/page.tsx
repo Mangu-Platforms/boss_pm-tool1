@@ -5,11 +5,12 @@ import { useState } from "react";
 
 type SearchResult = {
   id: string;
-  type: "issue" | "product";
+  type: "issue" | "product" | "milestone" | "epic";
   title: string;
   status?: string;
   priority?: string;
   product_name?: string;
+  url?: string;
 };
 
 export default function SearchPage() {
@@ -33,7 +34,7 @@ export default function SearchPage() {
     <main>
       <div className="kicker">Find</div>
       <h1>Search</h1>
-      <p className="lede">Search across all issues and products.</p>
+      <p className="lede">Search across issues, products, milestones, and epics.</p>
 
       <form className="search-form" onSubmit={handleSearch}>
         <input
@@ -59,7 +60,7 @@ export default function SearchPage() {
                 {results.map((r) => (
                   <Link
                     key={r.id}
-                    href={r.type === "issue" ? `/issues/${r.id}` : `/products/${r.id}`}
+                    href={r.url || (r.type === "issue" ? `/issues/${r.id}` : r.type === "product" ? `/products/${r.id}` : `/${r.type}s`)}
                     className="search-item"
                   >
                     <span className="search-type">{r.type}</span>
