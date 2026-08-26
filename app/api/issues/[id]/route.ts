@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { dbGetIssue, dbUpdateIssue, dbDeleteIssue } from "@/lib/db";
 import { logActivity } from "@/lib/activity";
+import { createNotification } from "@/lib/notifications";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -23,9 +24,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!issue) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
-  if (body.status) logActivity(issue, "status_changed", `→ ${body.status}`);
-  else if (body.assignee_kind) logActivity(issue, "assigned", `${body.assignee_kind}: ${body.agent_name || body.assignee_user || "unset"}`);
-  else logActivity(issue, "updated", Object.keys(body).join(", "));
+  if (body.status) {
+    logActivity(issue, "status_changed", `→ ${body.status}`);
+    createNotification("status_change", issue.id, issue.title, `Status changed to ${body.status}`);
+  } else if (body.assignee_kind) {
+    logActivity(issue, "assigned", `${body.assignee_kind}: ${body.agent_name || body.assignee_user || "unset"}`);
+    createNotification("assigned", issue.id, issue.title, `Reassigned to ${body.agent_name || body.assignee_user || "unset"}`);
+  } else {
+    logActivity(issue, "updated", Object.keys(body).join(", "));
+  }
   return NextResponse.json({ issue });
 }
 

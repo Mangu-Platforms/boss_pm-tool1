@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { dbCreateIssue, dbListIssues, dbListProducts } from "@/lib/db";
 import { validateCreate } from "@/lib/store";
 import { logActivity } from "@/lib/activity";
+import { createNotification } from "@/lib/notifications";
 import type { CreateIssueInput } from "@/lib/types";
 
 export async function GET(req: Request) {
@@ -28,6 +29,9 @@ export async function POST(req: Request) {
   try {
     const issue = await dbCreateIssue(body);
     logActivity(issue, "created", `"${issue.title}"`);
+    if (issue.assignee_kind === "agent") {
+      createNotification("assigned", issue.id, issue.title, `Assigned to agent ${issue.agent_name}`);
+    }
     return NextResponse.json({ issue }, { status: 201 });
   } catch (e) {
     return NextResponse.json(

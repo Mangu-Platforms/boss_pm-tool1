@@ -8,10 +8,18 @@ import { recordView } from "@/components/RecentlyViewed";
 import type { Comment } from "@/lib/comments";
 import type { IssueRelation } from "@/lib/relations";
 import type { Subtask } from "@/lib/subtasks";
+import type { TimeEntry } from "@/lib/timelog";
 import type { Issue, IssueLink, IssuePriority, Product } from "@/lib/types";
 
 const STATUSES = ["backlog", "open", "doing", "done", "cancelled"] as const;
 const PRIORITIES = ["critical", "high", "medium", "low"] as const;
+
+function formatMinutes(m: number): string {
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60);
+  const rem = m % 60;
+  return rem > 0 ? `${h}h ${rem}m` : `${h}h`;
+}
 
 export default function IssueDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -24,6 +32,10 @@ export default function IssueDetailPage() {
   const [subtasks, setSubtasks] = useState<Subtask[]>([]);
   const [newSubtask, setNewSubtask] = useState("");
   const [allIssues, setAllIssues] = useState<Issue[]>([]);
+  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+  const [totalMins, setTotalMins] = useState(0);
+  const [timeMinutes, setTimeMinutes] = useState("");
+  const [timeNote, setTimeNote] = useState("");
   const [newRelationType, setNewRelationType] = useState<string>("relates-to");
   const [newRelationTarget, setNewRelationTarget] = useState("");
   const [newComment, setNewComment] = useState("");
@@ -35,13 +47,14 @@ export default function IssueDetailPage() {
   const [bodyDraft, setBodyDraft] = useState("");
 
   const load = useCallback(async () => {
-    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, subtasksRes, issuesRes] = await Promise.all([
+    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, subtasksRes, timeRes, issuesRes] = await Promise.all([
       fetch(`/api/issues/${id}`).then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
       fetch(`/api/issues/${id}/comments`).then((r) => r.json()),
       fetch(`/api/issues/${id}/links`).then((r) => r.json()),
       fetch(`/api/issues/${id}/relations`).then((r) => r.json()),
       fetch(`/api/issues/${id}/subtasks`).then((r) => r.json()),
+      fetch(`/api/issues/${id}/time`).then((r) => r.json()),
       fetch("/api/issues").then((r) => r.json()),
     ]);
     setIssue(issueRes.issue || null);
@@ -50,6 +63,8 @@ export default function IssueDetailPage() {
     setLinks(linksRes.links || []);
     setRelations(relationsRes.relations || []);
     setSubtasks(subtasksRes.subtasks || []);
+    setTimeEntries(timeRes.entries || []);
+    setTotalMins(timeRes.total_minutes || 0);
     setAllIssues(issuesRes.issues || []);
     if (issueRes.issue) recordView(issueRes.issue.id, issueRes.issue.title);
   }, [id]);
@@ -538,6 +553,71 @@ export default function IssueDetailPage() {
             autoComplete="off"
           />
           <button className="go" type="submit" disabled={!newSubtask.trim()}>Add</button>
+        </form>
+      </div>
+
+      <div className="time-section">
+        <h2 className="section-title">
+          Time logged
+          {totalMins > 0 && <span className="time-total">{formatMinutes(totalMins)}</span>}
+        </h2>
+        {timeEntries.length > 0 && (
+          <div className="time-list">
+            {timeEntries.map((entry) => (
+              <div key={entry.id} className="time-entry">
+                <span className="time-amount">{formatMinutes(entry.minutes)}</span>
+                <span className="time-note">{entry.note || "—"}</span>
+                <span className="hint">{new Date(entry.logged_at).toLocaleDateString()}</span>
+                <button
+                  className="relation-remove"
+                  type="button"
+                  onClick={async () => {
+                    await fetch(`/api/issues/${id}/time?entry_id=${entry.id}`, { method: "DELETE" });
+                    setTimeEntries((prev) => prev.filter((e) => e.id !== entry.id));
+                    setTotalMins((prev) => prev - entry.minutes);
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <form
+          className="time-form"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const mins = Number(timeMinutes);
+            if (!mins || mins <= 0) return;
+            const res = await fetch(`/api/issues/${id}/time`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ minutes: mins, note: timeNote }),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              setTimeEntries((prev) => [data.entry, ...prev]);
+              setTotalMins((prev) => prev + mins);
+              setTimeMinutes("");
+              setTimeNote("");
+            }
+          }}
+        >
+          <input
+            type="number"
+            placeholder="mins"
+            className="time-minutes-input"
+            value={timeMinutes}
+            onChange={(e) => setTimeMinutes(e.target.value)}
+            min="1"
+          />
+          <input
+            placeholder="Note (optional)"
+            value={timeNote}
+            onChange={(e) => setTimeNote(e.target.value)}
+            autoComplete="off"
+          />
+          <button className="go" type="submit" disabled={!timeMinutes || Number(timeMinutes) <= 0}>Log</button>
         </form>
       </div>
 

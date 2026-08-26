@@ -11,6 +11,7 @@ const links = [
   { href: "/roadmap", label: "Roadmap" },
   { href: "/analytics", label: "Analytics" },
   { href: "/activity", label: "Activity" },
+  { href: "/inbox", label: "Inbox" },
   { href: "/settings", label: "Settings" },
 ];
 
