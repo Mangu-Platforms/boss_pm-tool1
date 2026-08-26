@@ -107,6 +107,8 @@ const links = [
   { href: "/team-agreements", label: "Team Agreements" },
   { href: "/security-scanning", label: "Security Scans" },
   { href: "/cost-allocation", label: "Cost Allocation" },
+  { href: "/release-gates", label: "Release Gates" },
+  { href: "/dependency-tracker", label: "Dependencies" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
