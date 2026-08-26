@@ -109,6 +109,8 @@ const links = [
   { href: "/cost-allocation", label: "Cost Allocation" },
   { href: "/release-gates", label: "Release Gates" },
   { href: "/dependency-tracker", label: "Dependencies" },
+  { href: "/audit-trails", label: "Audit Trails" },
+  { href: "/data-retention", label: "Data Retention" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
