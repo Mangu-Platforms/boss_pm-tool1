@@ -19,7 +19,14 @@ export type AuditEntry = {
   created_at: string;
 };
 
-const store: AuditEntry[] = [];
+const store: AuditEntry[] = [
+  { id: "audit-1", actor: "Max", action: "create", resource_type: "project", resource_id: "boss-pm", details: "Created product Boss PM", ip_address: null, created_at: "2025-01-05T10:00:00.000Z" },
+  { id: "audit-2", actor: "Alice", action: "create", resource_type: "issue", resource_id: "BOSS-1", details: "Created issue: Build MVP dashboard", ip_address: null, created_at: "2025-01-06T11:00:00.000Z" },
+  { id: "audit-3", actor: "Max", action: "create", resource_type: "member", resource_id: "Bob", details: "Added Bob to the workspace", ip_address: null, created_at: "2025-01-07T09:00:00.000Z" },
+  { id: "audit-4", actor: "Max", action: "create", resource_type: "sprint", resource_id: "sprint-1", details: "Created Sprint 1", ip_address: null, created_at: "2025-01-14T08:00:00.000Z" },
+  { id: "audit-5", actor: "Max", action: "update", resource_type: "decision", resource_id: "adr-001", details: "Accepted ADR-001: Use Next.js", ip_address: null, created_at: "2025-01-07T14:00:00.000Z" },
+  { id: "audit-6", actor: "Alice", action: "create", resource_type: "risk", resource_id: "risk-security", details: "Registered risk: Data breach", ip_address: null, created_at: "2025-01-12T10:00:00.000Z" },
+];
 
 export function logAudit(
   actor: string,

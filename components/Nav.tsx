@@ -37,6 +37,8 @@ const links = [
   { href: "/notifications", label: "Notifications" },
   { href: "/wiki", label: "Wiki" },
   { href: "/bookmarks", label: "Bookmarks" },
+  { href: "/audit", label: "Audit Log" },
+  { href: "/leave", label: "Leave" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];

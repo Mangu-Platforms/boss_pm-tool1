@@ -1363,3 +1363,45 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 }
 .bookmark-type { font-size: 10px; text-transform: uppercase; font-family: var(--mono); color: var(--lab); background: var(--ink-3); padding: 2px 6px; border-radius: 4px; }
 .bookmark-label { font-size: 14px; font-weight: 500; flex: 1; }
+
+/* Audit Log */
+.audit-filters { display: flex; gap: 10px; margin: 14px 0; align-items: center; flex-wrap: wrap; }
+.audit-filter-input {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 10px; color: var(--paper); font-size: 12px; outline: none;
+}
+.audit-list { display: flex; flex-direction: column; gap: 4px; margin: 14px 0; }
+.audit-entry {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-bottom: 1px solid var(--ink-3);
+  font-size: 13px;
+}
+.audit-entry:hover { background: var(--ink-2); }
+.audit-actor { font-weight: 600; min-width: 80px; }
+.audit-details { flex: 1; color: var(--paper-dim); }
+.audit-resource { font-family: var(--mono); font-size: 11px; color: var(--paper-dim); }
+
+/* Leave Tracker */
+.leave-list { display: flex; flex-direction: column; gap: 14px; margin: 18px 0; }
+.leave-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.leave-pending { border-left: 3px solid var(--gold); }
+.leave-approved { border-left: 3px solid var(--engine); }
+.leave-rejected { border-left: 3px solid var(--danger); }
+.leave-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.leave-member { font-size: 15px; font-weight: 600; }
+.leave-type { font-size: 10px; text-transform: uppercase; font-family: var(--mono); color: var(--lab); background: var(--ink-3); padding: 2px 6px; border-radius: 4px; }
+.leave-dates { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+.leave-reason { font-size: 13px; color: var(--paper-dim); margin: 6px 0 0; }
+.leave-actions { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.leave-form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.leave-form input, .leave-form textarea, .leave-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.leave-form input:focus, .leave-form textarea:focus { border-color: var(--gold-dim); }
+.leave-form textarea { resize: vertical; }
+.leave-date-row { display: flex; gap: 14px; }
+.leave-date-row label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--paper-dim); flex: 1; }
