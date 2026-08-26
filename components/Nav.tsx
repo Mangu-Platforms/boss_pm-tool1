@@ -83,6 +83,8 @@ const links = [
   { href: "/project-health", label: "Project Health" },
   { href: "/automation-engine", label: "Automations Engine" },
   { href: "/custom-dashboards", label: "Custom Dashboards" },
+  { href: "/release-calendar", label: "Release Calendar" },
+  { href: "/issue-cloning", label: "Issue Cloning" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
