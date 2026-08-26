@@ -111,6 +111,8 @@ const links = [
   { href: "/dependency-tracker", label: "Dependencies" },
   { href: "/audit-trails", label: "Audit Trails" },
   { href: "/data-retention", label: "Data Retention" },
+  { href: "/perf-benchmarks", label: "Benchmarks" },
+  { href: "/queue-manager", label: "Queues" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
