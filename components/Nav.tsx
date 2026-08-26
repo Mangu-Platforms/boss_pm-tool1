@@ -68,6 +68,7 @@ const links = [
   { href: "/approvals", label: "Approvals" },
   { href: "/cost-tracking", label: "Cost Tracking" },
   { href: "/project-templates", label: "Project Templates" },
+  { href: "/recurring-tasks", label: "Recurring Tasks" },
   { href: "/resource-planning", label: "Resource Planning" },
   { href: "/gantt", label: "Gantt" },
   { href: "/metric-alerts", label: "Metric Alerts" },
