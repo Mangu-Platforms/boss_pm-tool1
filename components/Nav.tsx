@@ -85,6 +85,8 @@ const links = [
   { href: "/custom-dashboards", label: "Custom Dashboards" },
   { href: "/release-calendar", label: "Release Calendar" },
   { href: "/issue-cloning", label: "Issue Cloning" },
+  { href: "/resource-utilization", label: "Utilization" },
+  { href: "/workstreams", label: "Workstreams" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
