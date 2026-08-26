@@ -59,6 +59,9 @@ const links = [
   { href: "/workflows", label: "Workflows" },
   { href: "/api-keys", label: "API Keys" },
   { href: "/favorites", label: "Favorites" },
+  { href: "/roles", label: "Roles" },
+  { href: "/saved-filters", label: "Saved Filters" },
+  { href: "/bulk-ops", label: "Bulk Ops" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];

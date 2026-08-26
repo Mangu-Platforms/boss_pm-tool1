@@ -1852,3 +1852,56 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
   padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
 }
 .fav-form input:focus, .fav-form select:focus { border-color: var(--gold-dim); }
+
+/* Roles */
+.role-list { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; }
+.role-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.role-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.role-header h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.role-perms { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.role-perm { font-size: 11px; background: var(--ink-3); color: var(--engine); padding: 2px 6px; border-radius: 4px; }
+.role-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+.role-form input {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none; flex: 1; min-width: 140px;
+}
+.role-form input:focus { border-color: var(--gold-dim); }
+
+/* Saved Filters */
+.sf-list { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; }
+.sf-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.sf-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.sf-header h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.sf-badges { display: flex; gap: 6px; }
+.sf-meta { display: flex; gap: 12px; margin: 4px 0; }
+.sf-conditions { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+.sf-cond { font-size: 11px; background: var(--ink-3); color: var(--lab); padding: 2px 6px; border-radius: 4px; font-family: var(--mono); }
+.sf-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+.sf-form input, .sf-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.sf-form input:focus, .sf-form select:focus { border-color: var(--gold-dim); }
+
+/* Bulk Operations */
+.bo-form { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; align-items: center; }
+.bo-form input, .bo-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.bo-form input:focus, .bo-form select:focus { border-color: var(--gold-dim); }
+.bo-form input { flex: 1; min-width: 140px; }
+.bo-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+.bo-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px;
+}
+.bo-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.bo-action { font-size: 14px; font-weight: 500; text-transform: capitalize; }
+.bo-meta { display: flex; gap: 12px; align-items: center; }
