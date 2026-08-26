@@ -2265,3 +2265,35 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .ts-member { font-weight: 600; }
 .ts-level { font-size: 11px; font-weight: 600; text-transform: uppercase; }
 .ts-empty { color: var(--ink-3); }
+
+/* Notifications Center */
+.nc-header { display: flex; align-items: center; justify-content: space-between; }
+.nc-header h1 { display: flex; align-items: center; gap: 10px; }
+.nc-badge { background: var(--danger); color: white; font-size: 12px; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+.nc-list { display: flex; flex-direction: column; gap: 4px; margin-top: 14px; }
+.nc-item { display: flex; gap: 12px; padding: 12px 14px; border-radius: 8px; cursor: pointer; transition: background 0.15s; }
+.nc-item:hover { background: var(--ink-2); }
+.nc-unread { background: var(--ink-2); border-left: 3px solid var(--gold); }
+.nc-read { opacity: 0.6; }
+.nc-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: var(--ink-3); border-radius: 6px; font-size: 12px; font-weight: 700; color: var(--lab); flex-shrink: 0; }
+.nc-content { flex: 1; min-width: 0; }
+.nc-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.nc-message { font-size: 13px; color: var(--mute); }
+.nc-time { font-size: 11px; color: var(--mute); margin-top: 4px; }
+
+/* Document Versions */
+.dv-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; margin-top: 14px; }
+.dv-docs { display: flex; flex-direction: column; gap: 6px; }
+.dv-doc { background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; cursor: pointer; }
+.dv-doc:hover { border-color: var(--gold-dim); }
+.dv-doc-active { border-color: var(--gold); }
+.dv-doc-title { font-size: 14px; font-weight: 600; }
+.dv-doc-meta { font-size: 11px; color: var(--mute); margin-top: 2px; }
+.dv-versions { display: flex; flex-direction: column; gap: 10px; }
+.dv-version { background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+.dv-ver-header { display: flex; align-items: center; gap: 12px; }
+.dv-ver-num { font-weight: 700; color: var(--gold); font-family: var(--mono); }
+.dv-ver-author { font-size: 13px; }
+.dv-ver-date { font-size: 12px; color: var(--mute); margin-left: auto; }
+.dv-ver-summary { font-size: 13px; color: var(--mute); margin: 6px 0 0; }
+.dv-empty { color: var(--mute); font-size: 14px; text-align: center; margin-top: 40px; }
