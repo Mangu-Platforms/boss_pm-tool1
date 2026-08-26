@@ -2358,3 +2358,30 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .ws-progress-label { position: absolute; right: 0; top: -18px; font-size: 11px; font-family: var(--mono); font-weight: 600; }
 .ws-meta { display: flex; gap: 12px; font-size: 12px; color: var(--mute); margin-bottom: 4px; }
 .ws-dates { font-size: 11px; color: var(--mute); margin-bottom: 8px; }
+
+/* Change Requests */
+.cr-list { display: flex; flex-direction: column; gap: 10px; }
+.cr-card { background: var(--ink-2); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 8px; padding: 14px; }
+.cr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.cr-title { font-weight: 700; font-size: 15px; }
+.cr-category { font-size: 11px; background: var(--ink-3); padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+.cr-desc { font-size: 13px; color: var(--mute); margin-bottom: 8px; }
+.cr-meta { display: flex; gap: 14px; font-size: 12px; align-items: center; margin-bottom: 6px; }
+.cr-risk { font-weight: 600; }
+.cr-status { text-transform: capitalize; font-weight: 600; }
+.cr-systems { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+.cr-actions { display: flex; gap: 6px; }
+
+/* Impact Analysis */
+.ia-section { margin-bottom: 24px; }
+.ia-section h2 { font-size: 16px; margin-bottom: 10px; }
+.ia-items { display: flex; flex-direction: column; gap: 8px; }
+.ia-item { background: var(--ink-2); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 8px; padding: 12px; }
+.ia-item-header { display: flex; gap: 12px; font-size: 12px; margin-bottom: 4px; }
+.ia-severity { font-weight: 700; text-transform: uppercase; }
+.ia-area { background: var(--ink-3); padding: 1px 6px; border-radius: 3px; }
+.ia-cr-id { font-family: var(--mono); color: var(--mute); margin-left: auto; }
+.ia-desc { font-size: 13px; margin-bottom: 4px; }
+.ia-mitigation { font-size: 12px; color: var(--mute); font-style: italic; }
+.ia-report-selector { display: flex; gap: 8px; margin-bottom: 14px; }
+.ia-report-selector input { background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 13px; }

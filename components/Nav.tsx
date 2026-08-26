@@ -87,6 +87,8 @@ const links = [
   { href: "/issue-cloning", label: "Issue Cloning" },
   { href: "/resource-utilization", label: "Utilization" },
   { href: "/workstreams", label: "Workstreams" },
+  { href: "/change-requests", label: "Change Requests" },
+  { href: "/impact-analysis", label: "Impact Analysis" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
