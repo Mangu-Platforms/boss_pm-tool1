@@ -3,31 +3,77 @@
 import { useEffect, useState } from "react";
 
 const shortcuts = [
-  { key: "C", desc: "Focus create form" },
+  { key: "?", desc: "Toggle shortcuts panel" },
+  { key: "Cmd+K", desc: "Open command palette" },
+  { key: "C", desc: "Create new issue" },
   { key: "/", desc: "Focus search" },
-  { key: "?", desc: "Toggle shortcuts" },
-  { key: "1", desc: "Go to Portfolio" },
-  { key: "2", desc: "Go to Kanban" },
-  { key: "3", desc: "Go to Issues" },
+  { key: "G then I", desc: "Go to Issues" },
+  { key: "G then B", desc: "Go to Board" },
+  { key: "G then R", desc: "Go to Roadmap" },
+  { key: "G then A", desc: "Go to Analytics" },
+  { key: "G then N", desc: "Go to Inbox" },
+  { key: "G then H", desc: "Go to Home" },
+  { key: "G then S", desc: "Go to Settings" },
+  { key: "Esc", desc: "Close dialog / cancel edit" },
 ];
 
 export function KeyboardHelp() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (
-        e.key === "?" &&
-        !(e.target instanceof HTMLInputElement) &&
-        !(e.target instanceof HTMLTextAreaElement) &&
-        !(e.target instanceof HTMLSelectElement)
-      ) {
+    let gPending = false;
+    let timer: ReturnType<typeof setTimeout>;
+
+    function handleKey(e: KeyboardEvent) {
+      const inInput = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement;
+
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+
+      if (inInput) return;
+
+      if (e.key === "?" && !e.metaKey && !e.ctrlKey) {
         e.preventDefault();
         setOpen((v) => !v);
+        return;
       }
+
+      if (e.key === "g" || e.key === "G") {
+        if (!e.metaKey && !e.ctrlKey) {
+          gPending = true;
+          clearTimeout(timer);
+          timer = setTimeout(() => { gPending = false; }, 1000);
+        }
+        return;
+      }
+
+      if (gPending) {
+        gPending = false;
+        clearTimeout(timer);
+        const routes: Record<string, string> = {
+          i: "/issues", b: "/board", r: "/roadmap",
+          a: "/analytics", n: "/inbox", h: "/", s: "/settings",
+        };
+        const route = routes[e.key.toLowerCase()];
+        if (route) {
+          e.preventDefault();
+          window.location.href = route;
+        }
+        return;
+      }
+
+      if (e.key === "c" && !e.metaKey && !e.ctrlKey) {
+        window.location.href = "/issues/new";
+      }
+    }
+
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      clearTimeout(timer);
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   if (!open) return null;

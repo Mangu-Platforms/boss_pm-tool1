@@ -636,3 +636,14 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .notif-title:hover { color: var(--gold); }
 .notif-message { font-size: 13px; color: var(--paper-dim); }
 .notif-time { font-size: 12px; color: var(--mute); }
+
+/* Labels */
+.label-editor { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.label-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.label-tag {
+  font-size: 12px; font-family: var(--mono); padding: 2px 8px;
+  border: 1px solid; border-radius: 12px; display: flex; align-items: center; gap: 4px;
+}
+.label-remove { background: none; border: none; cursor: pointer; font-size: 12px; opacity: 0.6; padding: 0 2px; color: inherit; }
+.label-remove:hover { opacity: 1; }
+.label-select { background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; font-size: 12px; }

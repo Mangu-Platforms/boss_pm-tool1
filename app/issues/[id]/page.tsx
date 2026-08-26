@@ -9,6 +9,7 @@ import type { Comment } from "@/lib/comments";
 import type { IssueRelation } from "@/lib/relations";
 import type { Subtask } from "@/lib/subtasks";
 import type { TimeEntry } from "@/lib/timelog";
+import type { Label } from "@/lib/labels";
 import type { Issue, IssueLink, IssuePriority, Product } from "@/lib/types";
 
 const STATUSES = ["backlog", "open", "doing", "done", "cancelled"] as const;
@@ -36,6 +37,8 @@ export default function IssueDetailPage() {
   const [totalMins, setTotalMins] = useState(0);
   const [timeMinutes, setTimeMinutes] = useState("");
   const [timeNote, setTimeNote] = useState("");
+  const [issueLabels, setIssueLabels] = useState<Label[]>([]);
+  const [allLabels, setAllLabels] = useState<Label[]>([]);
   const [newRelationType, setNewRelationType] = useState<string>("relates-to");
   const [newRelationTarget, setNewRelationTarget] = useState("");
   const [newComment, setNewComment] = useState("");
@@ -47,7 +50,7 @@ export default function IssueDetailPage() {
   const [bodyDraft, setBodyDraft] = useState("");
 
   const load = useCallback(async () => {
-    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, subtasksRes, timeRes, issuesRes] = await Promise.all([
+    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, subtasksRes, timeRes, labelsRes, allLabelsRes, issuesRes] = await Promise.all([
       fetch(`/api/issues/${id}`).then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
       fetch(`/api/issues/${id}/comments`).then((r) => r.json()),
@@ -55,6 +58,8 @@ export default function IssueDetailPage() {
       fetch(`/api/issues/${id}/relations`).then((r) => r.json()),
       fetch(`/api/issues/${id}/subtasks`).then((r) => r.json()),
       fetch(`/api/issues/${id}/time`).then((r) => r.json()),
+      fetch(`/api/issues/${id}/labels`).then((r) => r.json()),
+      fetch("/api/labels").then((r) => r.json()),
       fetch("/api/issues").then((r) => r.json()),
     ]);
     setIssue(issueRes.issue || null);
@@ -65,6 +70,8 @@ export default function IssueDetailPage() {
     setSubtasks(subtasksRes.subtasks || []);
     setTimeEntries(timeRes.entries || []);
     setTotalMins(timeRes.total_minutes || 0);
+    setIssueLabels(labelsRes.labels || []);
+    setAllLabels(allLabelsRes.labels || []);
     setAllIssues(issuesRes.issues || []);
     if (issueRes.issue) recordView(issueRes.issue.id, issueRes.issue.title);
   }, [id]);
@@ -336,6 +343,56 @@ export default function IssueDetailPage() {
               issue.product_id
             )}
           </span>
+        </div>
+
+        <div className="detail-row">
+          <span className="detail-label">Labels</span>
+          <div className="label-editor">
+            <div className="label-tags">
+              {issueLabels.map((lbl) => (
+                <span key={lbl.id} className="label-tag" style={{ borderColor: lbl.color, color: lbl.color }}>
+                  {lbl.name}
+                  <button
+                    className="label-remove"
+                    type="button"
+                    onClick={async () => {
+                      const res = await fetch(`/api/issues/${id}/labels?label_id=${lbl.id}`, { method: "DELETE" });
+                      if (res.ok) {
+                        const data = await res.json();
+                        setIssueLabels(data.labels);
+                      }
+                    }}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+            {allLabels.filter((l) => !issueLabels.find((il) => il.id === l.id)).length > 0 && (
+              <select
+                className="label-select"
+                value=""
+                onChange={async (e) => {
+                  const labelId = e.target.value;
+                  if (!labelId) return;
+                  const res = await fetch(`/api/issues/${id}/labels`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ label_id: labelId }),
+                  });
+                  if (res.ok) {
+                    const data = await res.json();
+                    setIssueLabels(data.labels);
+                  }
+                }}
+              >
+                <option value="">+ Add label</option>
+                {allLabels.filter((l) => !issueLabels.find((il) => il.id === l.id)).map((l) => (
+                  <option key={l.id} value={l.id}>{l.name}</option>
+                ))}
+              </select>
+            )}
+          </div>
         </div>
 
         <div className="detail-row">
