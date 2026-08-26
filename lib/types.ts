@@ -1,5 +1,6 @@
 export type EngineTag = "cash-engine" | "lab";
 export type IssueStatus = "backlog" | "open" | "doing" | "done" | "cancelled";
+export type IssuePriority = "critical" | "high" | "medium" | "low";
 export type AssigneeKind = "user" | "agent";
 export type AgentName = "alice" | "swarm";
 
@@ -21,6 +22,7 @@ export type Issue = {
   title: string;
   body: string;
   status: IssueStatus;
+  priority: IssuePriority;
   assignee_kind: AssigneeKind;
   assignee_user: string | null;
   agent_name: AgentName | null;
@@ -49,6 +51,7 @@ export type CreateIssueInput = {
   product_id: string;
   title: string;
   body?: string;
+  priority?: IssuePriority;
   assignee_kind: AssigneeKind;
   assignee_user?: string | null;
   agent_name?: AgentName | null;

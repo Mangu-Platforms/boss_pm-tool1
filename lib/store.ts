@@ -24,6 +24,36 @@ export function listProducts(): Product[] {
   return mem().products.slice().sort((a, b) => a.name.localeCompare(b.name));
 }
 
+export type CreateProductInput = {
+  name: string;
+  slug: string;
+  engine_tag: "cash-engine" | "lab";
+  github_owner?: string;
+  github_repo?: string | null;
+  homepage?: string | null;
+  money_note?: string | null;
+};
+
+export function createProduct(input: CreateProductInput): Product {
+  if (!input.name?.trim()) throw new Error("name required");
+  if (!input.slug?.trim()) throw new Error("slug required");
+  if (mem().products.some((p) => p.slug === input.slug)) throw new Error("slug already exists");
+
+  const product: Product = {
+    id: crypto.randomUUID(),
+    slug: input.slug.trim(),
+    name: input.name.trim(),
+    engine_tag: input.engine_tag,
+    github_owner: input.github_owner || "Mangu-Platforms",
+    github_repo: input.github_repo ?? null,
+    homepage: input.homepage ?? null,
+    money_note: input.money_note ?? null,
+    created_at: new Date().toISOString(),
+  };
+  mem().products.push(product);
+  return product;
+}
+
 export function getProduct(slug: string): Product | undefined {
   return mem().products.find((p) => p.slug === slug || p.id === slug);
 }
@@ -66,6 +96,7 @@ export function createIssue(input: CreateIssueInput): Issue {
     title: input.title.trim(),
     body: input.body?.trim() ?? "",
     status: "open",
+    priority: input.priority ?? "medium",
     assignee_kind: input.assignee_kind,
     assignee_user: input.assignee_kind === "user" ? input.assignee_user!.trim() : null,
     agent_name: input.assignee_kind === "agent" ? input.agent_name! : null,
@@ -76,6 +107,46 @@ export function createIssue(input: CreateIssueInput): Issue {
   };
   mem().issues.unshift(issue);
   return issue;
+}
+
+export function getIssue(id: string): Issue | undefined {
+  return mem().issues.find((i) => i.id === id);
+}
+
+type IssueUpdates = Partial<Pick<Issue, "status" | "title" | "body" | "due_on" | "priority" | "assignee_kind" | "assignee_user" | "agent_name" | "cost_cap_cents">>;
+
+export function updateIssue(id: string, updates: IssueUpdates): Issue | null {
+  const m = mem();
+  const idx = m.issues.findIndex((i) => i.id === id);
+  if (idx < 0) return null;
+  const issue = m.issues[idx];
+  if (updates.status !== undefined) issue.status = updates.status;
+  if (updates.title !== undefined) issue.title = updates.title;
+  if (updates.body !== undefined) issue.body = updates.body;
+  if (updates.due_on !== undefined) issue.due_on = updates.due_on;
+  if (updates.priority !== undefined) issue.priority = updates.priority;
+  if (updates.assignee_kind !== undefined) {
+    issue.assignee_kind = updates.assignee_kind;
+    if (updates.assignee_kind === "agent") {
+      issue.agent_name = updates.agent_name ?? issue.agent_name;
+      issue.cost_cap_cents = updates.cost_cap_cents ?? issue.cost_cap_cents;
+      issue.assignee_user = null;
+    } else {
+      issue.assignee_user = updates.assignee_user ?? issue.assignee_user;
+      issue.agent_name = null;
+      issue.cost_cap_cents = null;
+    }
+  }
+  issue.updated_at = new Date().toISOString();
+  return issue;
+}
+
+export function deleteIssue(id: string): boolean {
+  const m = mem();
+  const idx = m.issues.findIndex((i) => i.id === id);
+  if (idx < 0) return false;
+  m.issues.splice(idx, 1);
+  return true;
 }
 
 export function upsertLinks(incoming: IssueLink[]): IssueLink[] {

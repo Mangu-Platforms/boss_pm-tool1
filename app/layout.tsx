@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import "./globals.css";
+import { Nav } from "@/components/Nav";
+import { KeyboardHelp } from "@/components/KeyboardHelp";
+import { KeyboardNav } from "@/components/KeyboardNav";
+import { ToastContainer } from "@/components/Toast";
+import { QuickAdd } from "@/components/QuickAdd";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
-  title: "Boss PM — Mangu",
+  title: "Boss PM — Mangu Platforms",
   description: "Operator PM. Instant. Agent-native. One portfolio board.",
 };
 
@@ -13,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
       </head>
@@ -24,14 +29,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Mangu Platforms
               <b>Boss PM</b>
             </div>
-            <nav className="nav">
-              <Link href="/">Board</Link>
-              <Link href="/issues">Issues</Link>
-              <Link href="/issues/new">Create</Link>
-            </nav>
+            <Nav />
+            <ThemeToggle />
           </header>
           {children}
         </div>
+        <KeyboardHelp />
+        <KeyboardNav />
+        <ToastContainer />
+        <QuickAdd />
       </body>
     </html>
   );

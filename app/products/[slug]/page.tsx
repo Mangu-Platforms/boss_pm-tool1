@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { IssueCreate } from "@/components/IssueCreate";
+import { IssueTable } from "@/components/IssueTable";
+import { SyncButton } from "@/components/SyncButton";
 import { formatCap } from "@/lib/money";
 import type { Issue, IssueLink, Product } from "@/lib/types";
 
@@ -12,47 +14,47 @@ export default function ProductPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [links, setLinks] = useState<IssueLink[]>([]);
-  const [syncMsg, setSyncMsg] = useState<string | null>(null);
 
-  async function load() {
-    const res = await fetch("/api/issues");
-    const data = await res.json();
-    const list = (data.products || []) as Product[];
+  const load = useCallback(async () => {
+    const [issuesRes, linksRes] = await Promise.all([
+      fetch("/api/issues").then((r) => r.json()),
+      fetch(`/api/sync/github?slug=${slug}`).then((r) => r.json()),
+    ]);
+    const list = (issuesRes.products || []) as Product[];
     setProducts(list);
     const p = list.find((x) => x.slug === slug) || null;
     setProduct(p);
-    setIssues((data.issues || []).filter((i: Issue) => i.product_id === p?.id));
-  }
+    setIssues((issuesRes.issues || []).filter((i: Issue) => i.product_id === p?.id));
+    setLinks(linksRes.links || []);
+  }, [slug]);
 
   useEffect(() => {
     load();
-  }, [slug]);
+  }, [load]);
 
-  async function sync() {
-    setSyncMsg("syncing…");
-    const res = await fetch("/api/sync/github", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slug }),
+  const handleOptimistic = useCallback((issue: Issue) => {
+    setIssues((prev) => [issue, ...prev]);
+  }, []);
+
+  const handleCreated = useCallback((issue: Issue) => {
+    setIssues((prev) => {
+      const filtered = prev.filter((i) => !i.pending);
+      return [issue, ...filtered];
     });
-    const data = await res.json();
-    if (!res.ok) {
-      setSyncMsg(data.error || "sync failed");
-      return;
-    }
-    const row = data.results?.[0];
-    setSyncMsg(row?.ok ? `pulled ${row.count} GitHub issues · mirrored ${data.mirrored}` : row?.error || "sync failed");
-    if (data.links) setLinks(data.links);
-    await load();
-  }
+  }, []);
 
   if (!product) {
     return (
       <main>
-        <p className="hint">Loading product…</p>
+        <div className="loading-state">
+          <p className="hint">Loading product…</p>
+        </div>
       </main>
     );
   }
+
+  const agentIssues = issues.filter((i) => i.assignee_kind === "agent");
+  const totalCap = agentIssues.reduce((acc, i) => acc + (i.cost_cap_cents || 0), 0);
 
   return (
     <main>
@@ -61,68 +63,101 @@ export default function ProductPage() {
       </div>
       <h1>{product.name}</h1>
       <p className="lede">
-        <span className={`tag ${product.engine_tag === "cash-engine" ? "engine" : "lab"}`}>{product.engine_tag}</span>
+        <span className={`tag ${product.engine_tag === "cash-engine" ? "engine" : "lab"}`}>
+          {product.engine_tag}
+        </span>
         {"  "}
         {product.money_note}
       </p>
+
+      <div className="stats-row">
+        <div className="stat">
+          <span className="stat-value">{issues.length}</span>
+          <span className="stat-label">Issues</span>
+        </div>
+        <div className="stat">
+          <span className="stat-value">{agentIssues.length}</span>
+          <span className="stat-label">Agent tasks</span>
+        </div>
+        <div className="stat">
+          <span className="stat-value">{formatCap(totalCap)}</span>
+          <span className="stat-label">Total cap</span>
+        </div>
+        <div className="stat">
+          <span className="stat-value">{links.length}</span>
+          <span className="stat-label">GH issues</span>
+        </div>
+      </div>
+
+      <div className="product-status-bar">
+        {(["open", "doing", "backlog", "done", "cancelled"] as const).map((s) => {
+          const count = issues.filter((i) => i.status === s).length;
+          if (!count) return null;
+          return (
+            <div
+              key={s}
+              className={`product-status-segment product-status-${s}`}
+              style={{ flex: count }}
+              title={`${s}: ${count}`}
+            />
+          );
+        })}
+      </div>
+
       <IssueCreate
         products={products}
         defaultProductId={product.id}
-        onCreated={(issue) => setIssues((prev) => [issue, ...prev])}
+        onOptimistic={handleOptimistic}
+        onCreated={handleCreated}
       />
-      <div className="filters">
-        <button className="chip" onClick={sync} type="button">
-          Sync GitHub issues
-        </button>
-        {syncMsg ? <span className="hint">{syncMsg}</span> : <span className="hint">one-way read. status mirrors GH when linked.</span>}
-      </div>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Assignee</th>
-            <th>Cap</th>
-          </tr>
-        </thead>
-        <tbody>
-          {issues.map((i) => (
-            <tr key={i.id}>
-              <td>{i.title}</td>
-              <td className={`status ${i.status}`}>{i.status}</td>
-              <td>{i.assignee_kind === "agent" ? i.agent_name : i.assignee_user}</td>
-              <td>{formatCap(i.cost_cap_cents)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {links.length ? (
+
+      <SyncButton
+        slug={slug}
+        onSynced={(data) => {
+          if (data.links) setLinks(data.links as IssueLink[]);
+          load();
+        }}
+      />
+
+      <h2 className="section-title">Issues</h2>
+      <IssueTable issues={issues} products={products} showProduct={false} />
+
+      {links.length > 0 && (
         <>
-          <h1 style={{ fontSize: 18, marginTop: 28 }}>GitHub mirror</h1>
+          <h2 className="section-title">GitHub mirror</h2>
+          <p className="hint" style={{ marginBottom: 12 }}>
+            Read-only. Status syncs from GitHub on each pull.
+          </p>
           <table className="table">
             <thead>
               <tr>
                 <th>#</th>
                 <th>Title</th>
-                <th>GH state</th>
+                <th>State</th>
+                <th>Synced</th>
               </tr>
             </thead>
             <tbody>
               {links.map((l) => (
                 <tr key={l.id}>
                   <td>
-                    <a href={l.github_html_url} target="_blank" rel="noreferrer">
-                      {l.github_issue_number}
+                    <a href={l.github_html_url} target="_blank" rel="noreferrer" className="gh-link">
+                      #{l.github_issue_number}
                     </a>
                   </td>
                   <td>{l.github_title}</td>
-                  <td className={`status ${l.github_state === "closed" ? "done" : "open"}`}>{l.github_state}</td>
+                  <td>
+                    <span className={`status ${l.github_state === "closed" ? "done" : "open"}`}>
+                      {l.github_state}
+                    </span>
+                  </td>
+                  <td className="hint">{new Date(l.synced_at).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </>
-      ) : null}
+      )}
     </main>
   );
 }
