@@ -62,6 +62,9 @@ const links = [
   { href: "/roles", label: "Roles" },
   { href: "/saved-filters", label: "Saved Filters" },
   { href: "/bulk-ops", label: "Bulk Ops" },
+  { href: "/sla-policies", label: "SLA Policies" },
+  { href: "/release-notes", label: "Release Notes" },
+  { href: "/dashboards", label: "Dashboards" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
