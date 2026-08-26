@@ -35,6 +35,8 @@ const links = [
   { href: "/integrations", label: "Integrations" },
   { href: "/automations", label: "Automations" },
   { href: "/notifications", label: "Notifications" },
+  { href: "/wiki", label: "Wiki" },
+  { href: "/bookmarks", label: "Bookmarks" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
