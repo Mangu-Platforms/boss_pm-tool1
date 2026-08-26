@@ -72,6 +72,8 @@ const links = [
   { href: "/resource-planning", label: "Resource Planning" },
   { href: "/gantt", label: "Gantt" },
   { href: "/metric-alerts", label: "Metric Alerts" },
+  { href: "/focus-mode", label: "Focus Mode" },
+  { href: "/team-pulse", label: "Team Pulse" },
   { href: "/sprint-planning", label: "Sprint Planning" },
   { href: "/kanban-swimlanes", label: "Swimlanes" },
   { href: "/project-health", label: "Project Health" },
