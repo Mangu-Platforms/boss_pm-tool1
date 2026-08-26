@@ -1405,3 +1405,74 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .leave-form textarea { resize: vertical; }
 .leave-date-row { display: flex; gap: 14px; }
 .leave-date-row label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--paper-dim); flex: 1; }
+
+/* Status Page */
+.status-banner {
+  padding: 16px 20px; border-radius: 10px; text-align: center;
+  font-size: 18px; font-weight: 700; margin: 18px 0;
+}
+.status-banner-operational { background: color-mix(in srgb, var(--engine) 15%, transparent); color: var(--engine); border: 1px solid var(--engine); }
+.status-banner-degraded { background: color-mix(in srgb, var(--gold) 15%, transparent); color: var(--gold); border: 1px solid var(--gold); }
+.status-banner-partial_outage { background: color-mix(in srgb, orange 12%, transparent); color: orange; border: 1px solid orange; }
+.status-banner-major_outage { background: color-mix(in srgb, var(--danger) 15%, transparent); color: var(--danger); border: 1px solid var(--danger); }
+.status-banner-maintenance { background: color-mix(in srgb, var(--lab) 12%, transparent); color: var(--lab); border: 1px solid var(--lab); }
+
+.status-services { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+.status-svc {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 16px;
+}
+.status-svc-header { display: flex; align-items: center; gap: 10px; }
+.status-svc-name { font-size: 15px; font-weight: 600; flex: 1; }
+.status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.status-dot-operational { background: var(--engine); }
+.status-dot-degraded { background: var(--gold); }
+.status-dot-partial_outage { background: orange; }
+.status-dot-major_outage { background: var(--danger); }
+.status-dot-maintenance { background: var(--lab); }
+
+.status-incidents { display: flex; flex-direction: column; gap: 14px; margin: 14px 0; }
+.status-incident {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.status-incident-critical { border-left: 3px solid var(--danger); }
+.status-incident-major { border-left: 3px solid var(--gold); }
+.status-incident-minor { border-left: 3px solid var(--mute); }
+.status-incident-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.status-incident-header h3 { flex: 1; margin: 0; font-size: 15px; }
+.status-updates { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.status-update { padding-left: 14px; border-left: 2px solid var(--ink-3); }
+.status-update p { margin: 2px 0 0; font-size: 13px; }
+
+/* Custom Fields */
+.cf-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.cf-card {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 14px;
+}
+.cf-name { font-size: 14px; font-weight: 600; }
+.cf-type { font-size: 11px; text-transform: uppercase; font-family: var(--mono); color: var(--lab); background: var(--ink-3); padding: 2px 6px; border-radius: 4px; }
+.cf-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+.cf-form input, .cf-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.cf-form input:focus { border-color: var(--gold-dim); }
+.cf-required-label { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+
+/* Timeline */
+.timeline-container { margin: 18px 0; overflow-x: auto; }
+.timeline-track { position: relative; min-height: 200px; padding: 0 20px; }
+.timeline-axis {
+  display: flex; justify-content: space-between; padding: 8px 0;
+  border-bottom: 1px solid var(--line); margin-bottom: 14px;
+}
+.timeline-section { position: relative; min-height: 60px; margin-bottom: 18px; }
+.timeline-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--paper-dim); margin-bottom: 10px; }
+.timeline-item { position: absolute; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.timeline-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.timeline-diamond { width: 10px; height: 10px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+.timeline-item-label { font-size: 11px; color: var(--paper-dim); max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+.timeline-milestone { top: 0; }

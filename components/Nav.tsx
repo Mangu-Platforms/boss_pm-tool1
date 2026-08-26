@@ -39,6 +39,9 @@ const links = [
   { href: "/bookmarks", label: "Bookmarks" },
   { href: "/audit", label: "Audit Log" },
   { href: "/leave", label: "Leave" },
+  { href: "/status-page", label: "Status Page" },
+  { href: "/custom-fields", label: "Custom Fields" },
+  { href: "/timeline", label: "Timeline" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
