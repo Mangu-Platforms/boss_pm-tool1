@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { dbGetIssue, dbUpdateIssue, dbDeleteIssue } from "@/lib/db";
 import { logActivity } from "@/lib/activity";
-import type { IssueStatus } from "@/lib/types";
+import type { IssuePriority, IssueStatus } from "@/lib/types";
 
 export async function POST(req: Request) {
-  let body: { action: string; ids: string[]; status?: IssueStatus };
+  let body: { action: string; ids: string[]; status?: IssueStatus; priority?: IssuePriority };
   try {
     body = await req.json();
   } catch {
@@ -30,6 +30,21 @@ export async function POST(req: Request) {
         const issue = await dbUpdateIssue(id, { status: body.status });
         if (issue) {
           logActivity(issue, "status_changed", `→ ${body.status}`);
+          results.push({ id, ok: true });
+        } else {
+          results.push({ id, ok: false, error: "not found" });
+        }
+      }
+      break;
+    }
+    case "update_priority": {
+      if (!body.priority) {
+        return NextResponse.json({ error: "priority required" }, { status: 400 });
+      }
+      for (const id of body.ids) {
+        const issue = await dbUpdateIssue(id, { priority: body.priority });
+        if (issue) {
+          logActivity(issue, "priority_changed", `→ ${body.priority}`);
           results.push({ id, ok: true });
         } else {
           results.push({ id, ok: false, error: "not found" });

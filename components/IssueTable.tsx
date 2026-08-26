@@ -10,15 +10,21 @@ type Props = {
   issues: Issue[];
   products: Product[];
   showProduct?: boolean;
+  selected?: Set<string>;
+  onToggle?: (id: string) => void;
+  onToggleAll?: () => void;
 };
 
-export function IssueTable({ issues, products, showProduct = true }: Props) {
+export function IssueTable({ issues, products, showProduct = true, selected, onToggle, onToggleAll }: Props) {
   function productName(id: string) {
     return products.find((p) => p.id === id)?.name || id;
   }
   function productSlug(id: string) {
     return products.find((p) => p.id === id)?.slug || "";
   }
+
+  const selectable = !!selected && !!onToggle;
+  const allSelected = selectable && issues.length > 0 && issues.every((i) => selected.has(i.id));
 
   if (!issues.length) {
     return <p className="hint" style={{ padding: "16px 0" }}>No issues match the current filters.</p>;
@@ -29,6 +35,11 @@ export function IssueTable({ issues, products, showProduct = true }: Props) {
       <table className="table">
         <thead>
           <tr>
+            {selectable && (
+              <th style={{ width: 32 }}>
+                <input type="checkbox" checked={allSelected} onChange={onToggleAll} />
+              </th>
+            )}
             <th>Title</th>
             {showProduct && <th>Product</th>}
             <th>Priority</th>
@@ -42,7 +53,12 @@ export function IssueTable({ issues, products, showProduct = true }: Props) {
           {issues.map((i) => {
             const due = dueLabel(i.due_on);
             return (
-              <tr key={i.id} className={i.pending ? "row-pending" : ""}>
+              <tr key={i.id} className={`${i.pending ? "row-pending" : ""} ${selectable && selected.has(i.id) ? "row-selected" : ""}`}>
+                {selectable && (
+                  <td>
+                    <input type="checkbox" checked={selected.has(i.id)} onChange={() => onToggle(i.id)} />
+                  </td>
+                )}
                 <td>
                   {i.pending ? (
                     <span className="issue-title">{i.title}</span>

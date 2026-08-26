@@ -7,6 +7,7 @@ import { formatCap } from "@/lib/money";
 import { recordView } from "@/components/RecentlyViewed";
 import type { Comment } from "@/lib/comments";
 import type { IssueRelation } from "@/lib/relations";
+import type { Subtask } from "@/lib/subtasks";
 import type { Issue, IssueLink, IssuePriority, Product } from "@/lib/types";
 
 const STATUSES = ["backlog", "open", "doing", "done", "cancelled"] as const;
@@ -20,6 +21,8 @@ export default function IssueDetailPage() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [links, setLinks] = useState<IssueLink[]>([]);
   const [relations, setRelations] = useState<IssueRelation[]>([]);
+  const [subtasks, setSubtasks] = useState<Subtask[]>([]);
+  const [newSubtask, setNewSubtask] = useState("");
   const [allIssues, setAllIssues] = useState<Issue[]>([]);
   const [newRelationType, setNewRelationType] = useState<string>("relates-to");
   const [newRelationTarget, setNewRelationTarget] = useState("");
@@ -32,12 +35,13 @@ export default function IssueDetailPage() {
   const [bodyDraft, setBodyDraft] = useState("");
 
   const load = useCallback(async () => {
-    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, issuesRes] = await Promise.all([
+    const [issueRes, productsRes, commentsRes, linksRes, relationsRes, subtasksRes, issuesRes] = await Promise.all([
       fetch(`/api/issues/${id}`).then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
       fetch(`/api/issues/${id}/comments`).then((r) => r.json()),
       fetch(`/api/issues/${id}/links`).then((r) => r.json()),
       fetch(`/api/issues/${id}/relations`).then((r) => r.json()),
+      fetch(`/api/issues/${id}/subtasks`).then((r) => r.json()),
       fetch("/api/issues").then((r) => r.json()),
     ]);
     setIssue(issueRes.issue || null);
@@ -45,6 +49,7 @@ export default function IssueDetailPage() {
     setComments(commentsRes.comments || []);
     setLinks(linksRes.links || []);
     setRelations(relationsRes.relations || []);
+    setSubtasks(subtasksRes.subtasks || []);
     setAllIssues(issuesRes.issues || []);
     if (issueRes.issue) recordView(issueRes.issue.id, issueRes.issue.title);
   }, [id]);
@@ -461,6 +466,78 @@ export default function IssueDetailPage() {
             ))}
           </select>
           <button className="go" type="submit" disabled={!newRelationTarget}>Link</button>
+        </form>
+      </div>
+
+      <div className="subtasks-section">
+        <h2 className="section-title">
+          Sub-tasks
+          {subtasks.length > 0 && (
+            <span className="subtask-progress">
+              {subtasks.filter((s) => s.done).length}/{subtasks.length}
+            </span>
+          )}
+        </h2>
+        {subtasks.length > 0 && (
+          <div className="subtask-bar">
+            <div
+              className="subtask-bar-fill"
+              style={{ width: `${(subtasks.filter((s) => s.done).length / subtasks.length) * 100}%` }}
+            />
+          </div>
+        )}
+        <div className="subtask-list">
+          {subtasks.map((st) => (
+            <div key={st.id} className={`subtask-item ${st.done ? "subtask-done" : ""}`}>
+              <input
+                type="checkbox"
+                checked={st.done}
+                onChange={async () => {
+                  const res = await fetch(`/api/issues/${id}/subtasks?subtask_id=${st.id}`, { method: "PATCH" });
+                  if (res.ok) {
+                    const data = await res.json();
+                    setSubtasks((prev) => prev.map((s) => s.id === st.id ? data.subtask : s));
+                  }
+                }}
+              />
+              <span className="subtask-title">{st.title}</span>
+              <button
+                className="relation-remove"
+                type="button"
+                onClick={async () => {
+                  await fetch(`/api/issues/${id}/subtasks?subtask_id=${st.id}`, { method: "DELETE" });
+                  setSubtasks((prev) => prev.filter((s) => s.id !== st.id));
+                }}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+        <form
+          className="subtask-form"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (!newSubtask.trim()) return;
+            const res = await fetch(`/api/issues/${id}/subtasks`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ title: newSubtask.trim() }),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              setSubtasks((prev) => [...prev, data.subtask]);
+              setNewSubtask("");
+            }
+          }}
+        >
+          <input
+            placeholder="Add a sub-task..."
+            value={newSubtask}
+            onChange={(e) => setNewSubtask(e.target.value)}
+            autoComplete="off"
+          />
+          <button className="go" type="submit" disabled={!newSubtask.trim()}>Add</button>
         </form>
       </div>
 

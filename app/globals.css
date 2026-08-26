@@ -577,3 +577,28 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .relation-form { display: flex; gap: 8px; align-items: center; }
 .relation-form select { background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 13px; }
 .relation-form input { flex: 1; }
+
+/* Bulk actions bar */
+.bulk-bar {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  background: var(--ink-3); border: 1px solid var(--gold-dim); border-radius: 10px;
+  margin-bottom: 12px; flex-wrap: wrap;
+}
+.bulk-count { font-family: var(--mono); font-size: 12px; color: var(--gold); min-width: 80px; }
+.bulk-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; flex: 1; }
+.row-selected { background: var(--ink-3) !important; }
+
+/* Sub-tasks */
+.subtasks-section { margin-top: 24px; }
+.subtask-progress { font-family: var(--mono); font-size: 12px; color: var(--mute); margin-left: 8px; font-weight: 400; }
+.subtask-bar { height: 4px; background: var(--ink-3); border-radius: 2px; margin-bottom: 10px; overflow: hidden; }
+.subtask-bar-fill { height: 100%; background: var(--engine); border-radius: 2px; transition: width 0.2s; }
+.subtask-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.subtask-item {
+  display: flex; align-items: center; gap: 10px; padding: 6px 10px;
+  border-radius: 6px; transition: background 0.15s;
+}
+.subtask-item:hover { background: var(--ink-2); }
+.subtask-done .subtask-title { text-decoration: line-through; color: var(--mute); }
+.subtask-title { flex: 1; font-size: 14px; }
+.subtask-form { display: flex; gap: 8px; }

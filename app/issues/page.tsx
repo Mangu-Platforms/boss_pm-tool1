@@ -5,6 +5,7 @@ import { IssueCreate } from "@/components/IssueCreate";
 import { IssueTable } from "@/components/IssueTable";
 import { RecentlyViewed } from "@/components/RecentlyViewed";
 import { SearchInput } from "@/components/SearchInput";
+import { toast } from "@/components/Toast";
 import type { Issue, IssuePriority, IssueStatus, Product } from "@/lib/types";
 
 export default function IssuesPage() {
@@ -16,6 +17,7 @@ export default function IssuesPage() {
   const [priorityFilter, setPriorityFilter] = useState<IssuePriority | "all">("all");
   const [sortBy, setSortBy] = useState<"created" | "priority" | "due">("created");
   const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetch("/api/issues")
@@ -67,6 +69,65 @@ export default function IssuesPage() {
       return [issue, ...filtered];
     });
   }, []);
+
+  const handleToggle = useCallback((id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const handleToggleAll = useCallback(() => {
+    setSelected((prev) => {
+      if (shown.every((i) => prev.has(i.id))) return new Set();
+      return new Set(shown.map((i) => i.id));
+    });
+  }, [shown]);
+
+  async function bulkSetStatus(status: IssueStatus) {
+    const ids = Array.from(selected);
+    const res = await fetch("/api/issues/batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "update_status", ids, status }),
+    });
+    if (res.ok) {
+      setIssues((prev) => prev.map((i) => ids.includes(i.id) ? { ...i, status, updated_at: new Date().toISOString() } : i));
+      setSelected(new Set());
+      toast(`${ids.length} issue${ids.length > 1 ? "s" : ""} → ${status}`);
+    }
+  }
+
+  async function bulkSetPriority(priority: IssuePriority) {
+    const ids = Array.from(selected);
+    const res = await fetch("/api/issues/batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "update_priority", ids, priority }),
+    });
+    if (res.ok) {
+      setIssues((prev) => prev.map((i) => ids.includes(i.id) ? { ...i, priority, updated_at: new Date().toISOString() } : i));
+      setSelected(new Set());
+      toast(`${ids.length} issue${ids.length > 1 ? "s" : ""} → ${priority}`);
+    }
+  }
+
+  async function bulkDelete() {
+    const ids = Array.from(selected);
+    if (!confirm(`Delete ${ids.length} issue${ids.length > 1 ? "s" : ""}?`)) return;
+    const res = await fetch("/api/issues/batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "delete", ids }),
+    });
+    if (res.ok) {
+      setIssues((prev) => prev.filter((i) => !ids.includes(i.id)));
+      setSelected(new Set());
+      toast(`Deleted ${ids.length} issue${ids.length > 1 ? "s" : ""}`);
+    }
+  }
 
   return (
     <main>
@@ -128,7 +189,35 @@ export default function IssuesPage() {
         ))}
       </div>
 
-      <IssueTable issues={shown} products={products} />
+      {selected.size > 0 && (
+        <div className="bulk-bar">
+          <span className="bulk-count">{selected.size} selected</span>
+          <div className="bulk-actions">
+            <span className="hint">Status:</span>
+            {(["open", "doing", "backlog", "done", "cancelled"] as const).map((s) => (
+              <button key={s} className="chip chip-sm" onClick={() => bulkSetStatus(s)}>{s}</button>
+            ))}
+            <span className="filter-sep">|</span>
+            <span className="hint">Priority:</span>
+            {(["critical", "high", "medium", "low"] as const).map((p) => (
+              <button key={p} className="chip chip-sm" onClick={() => bulkSetPriority(p)}>{p}</button>
+            ))}
+            <span className="filter-sep">|</span>
+            <button className="chip chip-sm" style={{ color: "var(--danger)", borderColor: "var(--danger)" }} onClick={bulkDelete}>
+              delete
+            </button>
+          </div>
+          <button className="chip chip-sm" onClick={() => setSelected(new Set())}>clear</button>
+        </div>
+      )}
+
+      <IssueTable
+        issues={shown}
+        products={products}
+        selected={selected}
+        onToggle={handleToggle}
+        onToggleAll={handleToggleAll}
+      />
     </main>
   );
 }

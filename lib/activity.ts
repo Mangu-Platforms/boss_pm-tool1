@@ -4,7 +4,7 @@ export type ActivityEvent = {
   id: string;
   issue_id: string;
   product_id: string;
-  action: "created" | "status_changed" | "assigned" | "updated" | "deleted";
+  action: "created" | "status_changed" | "priority_changed" | "assigned" | "updated" | "deleted";
   actor: string;
   detail: string;
   created_at: string;
