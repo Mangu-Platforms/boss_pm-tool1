@@ -72,6 +72,8 @@ const links = [
   { href: "/resource-planning", label: "Resource Planning" },
   { href: "/gantt", label: "Gantt" },
   { href: "/metric-alerts", label: "Metric Alerts" },
+  { href: "/project-budgets", label: "Project Budgets" },
+  { href: "/team-skills", label: "Team Skills" },
   { href: "/focus-mode", label: "Focus Mode" },
   { href: "/team-pulse", label: "Team Pulse" },
   { href: "/sprint-planning", label: "Sprint Planning" },
