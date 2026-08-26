@@ -2027,3 +2027,57 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .ptpl-label { font-size: 11px; background: var(--ink-3); color: var(--lab); padding: 2px 6px; border-radius: 4px; }
 .ptpl-issues { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
 .ptpl-issue { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+
+/* Resource Planning */
+.rp-warn {
+  background: rgba(255, 100, 100, 0.15); border: 1px solid var(--danger); border-radius: 8px;
+  padding: 10px 14px; margin-bottom: 14px; color: var(--danger); font-size: 13px;
+}
+.rp-form { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; align-items: center; }
+.rp-form input, .rp-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.rp-form input:focus { border-color: var(--gold-dim); }
+.rp-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.rp-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--mute); padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.rp-table td { padding: 8px 10px; font-size: 13px; border-bottom: 1px solid var(--line); }
+.rp-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.rp-bar-wrap span { font-size: 12px; font-weight: 600; min-width: 36px; }
+.rp-bar { height: 8px; background: var(--gold); border-radius: 4px; }
+
+/* Gantt Chart */
+.gantt-range { font-size: 13px; color: var(--mute); margin-bottom: 14px; }
+.gantt-chart { display: flex; flex-direction: column; gap: 2px; }
+.gantt-row { display: flex; align-items: center; gap: 12px; min-height: 32px; }
+.gantt-label { display: flex; align-items: center; gap: 6px; min-width: 220px; max-width: 220px; font-size: 13px; }
+.gantt-type { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.gantt-type-issue { background: var(--engine); color: var(--ink); }
+.gantt-type-milestone { background: var(--lab); color: var(--ink); }
+.gantt-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gantt-track { flex: 1; height: 20px; background: var(--ink-2); border-radius: 4px; position: relative; overflow: hidden; }
+.gantt-bar { position: absolute; top: 2px; height: 16px; background: var(--ink-3); border-radius: 3px; overflow: hidden; }
+.gantt-progress { height: 100%; background: var(--gold); border-radius: 3px; }
+
+/* Metric Alerts */
+.ma-form { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; align-items: center; }
+.ma-form input, .ma-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.ma-form input:focus, .ma-form select:focus { border-color: var(--gold-dim); }
+.ma-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-top: 10px; }
+.ma-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.ma-status-triggered { border-color: var(--danger); }
+.ma-status-acknowledged { border-color: var(--gold); }
+.ma-status-resolved { border-color: var(--engine); }
+.ma-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.ma-header h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.ma-metric { font-size: 12px; color: var(--lab); font-family: var(--mono); margin-bottom: 4px; }
+.ma-condition { font-size: 13px; color: var(--mute); }
+.ma-triggered { font-size: 12px; color: var(--danger); margin-top: 4px; }
+.ma-notifiers { font-size: 12px; color: var(--mute); margin-top: 4px; }
+.ma-actions { display: flex; gap: 6px; margin-top: 8px; }
