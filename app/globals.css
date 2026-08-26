@@ -2453,3 +2453,19 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 .kb-article-cat { font-size: 11px; background: var(--ink-3); padding: 2px 8px; border-radius: 4px; text-transform: capitalize; }
 .kb-article-excerpt { font-size: 13px; color: var(--mute); margin-bottom: 8px; }
 .kb-article-meta { display: flex; gap: 10px; font-size: 12px; color: var(--mute); align-items: center; flex-wrap: wrap; }
+
+/* Runbooks */
+.rb-list { display: flex; flex-direction: column; gap: 8px; }
+.rb-card { background: var(--ink-2); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 8px; overflow: hidden; }
+.rb-header { display: flex; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer; }
+.rb-header:hover { background: var(--ink-3); }
+.rb-severity { font-weight: 700; font-size: 12px; min-width: 40px; }
+.rb-title { flex: 1; font-weight: 600; font-size: 14px; }
+.rb-uses { font-size: 12px; color: var(--mute); font-family: var(--mono); }
+.rb-desc { padding: 0 14px 8px; font-size: 13px; color: var(--mute); }
+.rb-steps { padding: 0 14px 14px; }
+.rb-step { display: flex; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.rb-step:last-child { border-bottom: none; }
+.rb-step-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: var(--ink-3); border-radius: 4px; font-size: 11px; font-weight: 700; color: var(--gold); }
+.rb-step-title { flex: 1; }
+.rb-step-time { font-family: var(--mono); font-size: 12px; color: var(--mute); }

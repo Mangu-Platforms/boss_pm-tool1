@@ -95,6 +95,8 @@ const links = [
   { href: "/ab-testing", label: "A/B Testing" },
   { href: "/compliance-tracker", label: "Compliance" },
   { href: "/knowledge-base", label: "Knowledge Base" },
+  { href: "/runbooks", label: "Runbooks" },
+  { href: "/oncall-schedule", label: "On-Call" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
