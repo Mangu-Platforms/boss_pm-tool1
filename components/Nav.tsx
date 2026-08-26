@@ -14,6 +14,7 @@ const links = [
   { href: "/sprints", label: "Sprints" },
   { href: "/analytics", label: "Analytics" },
   { href: "/activity", label: "Activity" },
+  { href: "/team", label: "Team" },
   { href: "/inbox", label: "Inbox" },
   { href: "/settings", label: "Settings" },
 ];
