@@ -53,3 +53,10 @@ export function calculateBurndown(
 
   return points;
 }
+
+export function sprintVelocity(sprintId: string, doneIssueIds: string[]): { total: number; completed: number; velocity: number } {
+  const issueIds = issuesForSprint(sprintId);
+  const doneSet = new Set(doneIssueIds);
+  const completed = issueIds.filter((id) => doneSet.has(id)).length;
+  return { total: issueIds.length, completed, velocity: completed };
+}

@@ -1275,3 +1275,44 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 }
 .decision-form input:focus, .decision-form textarea:focus { border-color: var(--gold-dim); }
 .decision-form textarea { resize: vertical; }
+
+/* Standups */
+.standup-dates { display: flex; gap: 8px; margin: 14px 0; flex-wrap: wrap; }
+.standup-list { display: flex; flex-direction: column; gap: 14px; margin: 14px 0; }
+.standup-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px 18px;
+}
+.standup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.standup-member { font-size: 15px; font-weight: 600; }
+.standup-sections { display: flex; flex-direction: column; gap: 8px; }
+.standup-section p { margin: 2px 0 0; font-size: 13px; color: var(--paper-dim); }
+.standup-label { font-size: 11px; text-transform: uppercase; font-family: var(--mono); color: var(--engine); }
+.standup-blocker .standup-label { color: var(--danger); }
+.standup-blocker { background: var(--ink-3); border-radius: 6px; padding: 8px 10px; }
+.standup-form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.standup-form input, .standup-form textarea {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.standup-form input:focus, .standup-form textarea:focus { border-color: var(--gold-dim); }
+.standup-form textarea { resize: vertical; }
+
+/* Permissions */
+.perm-roles-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.perm-role-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 14px;
+}
+.perm-user { font-size: 14px; font-weight: 600; min-width: 100px; }
+.perm-form { display: flex; gap: 10px; margin: 14px 0; align-items: center; flex-wrap: wrap; }
+.perm-form input, .perm-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.perm-form input:focus { border-color: var(--gold-dim); }
+.perm-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+.perm-table th { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); font-size: 11px; text-transform: uppercase; font-family: var(--mono); color: var(--paper-dim); }
+.perm-table td { padding: 8px 10px; border-bottom: 1px solid var(--ink-3); }
+.perm-check { text-align: center; color: var(--engine); font-family: var(--mono); }

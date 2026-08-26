@@ -28,6 +28,8 @@ const links = [
   { href: "/capacity", label: "Capacity" },
   { href: "/feedback", label: "Feedback" },
   { href: "/decisions", label: "Decisions" },
+  { href: "/standups", label: "Standups" },
+  { href: "/permissions", label: "Permissions" },
   { href: "/tags", label: "Tags" },
   { href: "/views", label: "Views" },
   { href: "/integrations", label: "Integrations" },

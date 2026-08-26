@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculateBurndown } from "@/lib/burndown";
+import { calculateBurndown, sprintVelocity } from "@/lib/burndown";
 import { createSprint, addIssueToSprint } from "@/lib/sprints";
 
 describe("burndown", () => {
@@ -35,5 +35,16 @@ describe("burndown", () => {
     addIssueToSprint(sp.id, "bd-days1");
     const points = calculateBurndown(sp.id, sp.start_date, sp.end_date, [], "2025-12-01");
     expect(points.length).toBe(15);
+  });
+
+  it("calculates sprint velocity", () => {
+    const sp = createSprint("BD-Vel", "", "2025-12-01", "2025-12-14");
+    addIssueToSprint(sp.id, "bd-v1");
+    addIssueToSprint(sp.id, "bd-v2");
+    addIssueToSprint(sp.id, "bd-v3");
+    const v = sprintVelocity(sp.id, ["bd-v1", "bd-v2"]);
+    expect(v.total).toBe(3);
+    expect(v.completed).toBe(2);
+    expect(v.velocity).toBe(2);
   });
 });
