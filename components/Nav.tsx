@@ -10,6 +10,7 @@ const links = [
   { href: "/agents", label: "Agents" },
   { href: "/roadmap", label: "Roadmap" },
   { href: "/workload", label: "Workload" },
+  { href: "/milestones", label: "Milestones" },
   { href: "/analytics", label: "Analytics" },
   { href: "/activity", label: "Activity" },
   { href: "/inbox", label: "Inbox" },

@@ -680,3 +680,24 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 }
 .workload-issue-link:hover { color: var(--gold); }
 .workload-issue-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Milestones */
+.milestone-list { display: flex; flex-direction: column; gap: 14px; }
+.milestone-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px; transition: border-color 0.15s;
+}
+.milestone-card:hover { border-color: var(--line-hover); }
+.milestone-done { opacity: 0.55; }
+.milestone-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.milestone-name { font-size: 16px; font-weight: 500; }
+.milestone-desc { font-size: 13px; color: var(--paper-dim); margin: 4px 0 8px; }
+.milestone-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+.milestone-form {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px;
+}
+.milestone-form input {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); outline: none; font-size: 13px;
+}
+.milestone-form input:focus { border-color: var(--gold-dim); }
