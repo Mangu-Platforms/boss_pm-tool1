@@ -101,6 +101,8 @@ const links = [
   { href: "/deployment-tracking", label: "Deployments" },
   { href: "/post-mortems", label: "Post-Mortems" },
   { href: "/error-budgets", label: "Error Budgets" },
+  { href: "/capacity-forecasting", label: "Capacity Forecast" },
+  { href: "/tech-debt", label: "Tech Debt" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
