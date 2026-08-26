@@ -1544,3 +1544,68 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
   padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
 }
 .env-form input:focus { border-color: var(--gold-dim); }
+
+/* Templates */
+.tpl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 14px 0; }
+.tpl-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px; cursor: pointer; transition: border-color 0.15s;
+}
+.tpl-card:hover { border-color: var(--gold-dim); }
+.tpl-selected { border-color: var(--gold); }
+.tpl-name { margin: 0 0 4px; font-size: 15px; }
+.tpl-prefix { font-size: 12px; color: var(--paper-dim); }
+.tpl-meta { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+.tpl-preview { margin-top: 18px; }
+.tpl-body {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 14px; font-family: var(--mono); font-size: 12px; white-space: pre-wrap;
+  color: var(--paper-dim); overflow-x: auto;
+}
+
+/* Checklists */
+.cl-list { display: flex; flex-direction: column; gap: 14px; margin: 14px 0; }
+.cl-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.cl-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.cl-header h3 { margin: 0; font-size: 15px; flex: 1; }
+.cl-progress { font-family: var(--mono); font-size: 12px; color: var(--engine); }
+.cl-progress-bar {
+  height: 4px; background: var(--ink-3); border-radius: 2px; margin: 8px 0;
+  overflow: hidden;
+}
+.cl-progress-fill { height: 100%; background: var(--engine); border-radius: 2px; transition: width 0.2s; }
+.cl-items { display: flex; flex-direction: column; gap: 4px; }
+.cl-item { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; padding: 3px 0; }
+.cl-item-done span { text-decoration: line-through; color: var(--mute); }
+.cl-add-item { display: flex; gap: 8px; margin-top: 8px; }
+.cl-add-item input {
+  flex: 1; background: var(--ink-3); border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 10px; color: var(--paper); font-size: 12px; outline: none;
+}
+.cl-form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.cl-form input, .cl-form textarea {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.cl-form input:focus, .cl-form textarea:focus { border-color: var(--gold-dim); }
+.cl-form textarea { resize: vertical; font-family: var(--mono); }
+
+/* Labels */
+.label-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.label-card {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 12px;
+}
+.label-swatch { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
+.label-name { font-size: 14px; font-weight: 500; }
+.label-color { font-size: 11px; }
+.label-form { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
+.label-form input[type="text"], .label-form input:not([type]) {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.label-form input[type="color"] { width: 40px; height: 36px; border: none; border-radius: 6px; cursor: pointer; }

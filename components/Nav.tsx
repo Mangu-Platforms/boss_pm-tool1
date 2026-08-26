@@ -45,6 +45,9 @@ const links = [
   { href: "/dependencies", label: "Dependencies" },
   { href: "/time-entries", label: "Time Tracking" },
   { href: "/environments", label: "Environments" },
+  { href: "/templates", label: "Templates" },
+  { href: "/checklists", label: "Checklists" },
+  { href: "/labels", label: "Labels" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];

@@ -24,6 +24,22 @@ export function listLabels(): Label[] {
   return [...labels];
 }
 
+export function getLabel(id: string): Label | null {
+  return labels.find((l) => l.id === id) || null;
+}
+
+export function getLabelByName(name: string): Label | null {
+  return labels.find((l) => l.name.toLowerCase() === name.toLowerCase()) || null;
+}
+
+export function updateLabel(id: string, updates: Partial<Pick<Label, "name" | "color">>): Label | null {
+  const label = labels.find((l) => l.id === id);
+  if (!label) return null;
+  if (updates.name !== undefined) label.name = updates.name;
+  if (updates.color !== undefined) label.color = updates.color;
+  return label;
+}
+
 export function createLabel(name: string, color: string): Label {
   const existing = labels.find((l) => l.name.toLowerCase() === name.toLowerCase());
   if (existing) return existing;

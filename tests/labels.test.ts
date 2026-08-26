@@ -1,11 +1,36 @@
 import { describe, it, expect } from "vitest";
-import { listLabels, createLabel, deleteLabel, addLabelToIssue, removeLabelFromIssue, labelsForIssue, issuesWithLabel } from "@/lib/labels";
+import { listLabels, getLabel, getLabelByName, createLabel, updateLabel, deleteLabel, addLabelToIssue, removeLabelFromIssue, labelsForIssue, issuesWithLabel } from "@/lib/labels";
 
 describe("labels", () => {
   it("lists default labels", () => {
     const labels = listLabels();
     expect(labels.length).toBeGreaterThanOrEqual(6);
     expect(labels.find((l) => l.name === "bug")).toBeTruthy();
+  });
+
+  it("gets label by id", () => {
+    const label = getLabel("lbl-bug");
+    expect(label).not.toBeNull();
+    expect(label!.name).toBe("bug");
+  });
+
+  it("gets label by name case-insensitive", () => {
+    const label = getLabelByName("Feature");
+    expect(label).not.toBeNull();
+    expect(label!.id).toBe("lbl-feature");
+  });
+
+  it("returns null for unknown label", () => {
+    expect(getLabel("lbl-nope")).toBeNull();
+    expect(getLabelByName("nope")).toBeNull();
+  });
+
+  it("updates a label", () => {
+    const lbl = createLabel("upd-test", "#111");
+    const updated = updateLabel(lbl.id, { color: "#222", name: "upd-test-renamed" });
+    expect(updated).not.toBeNull();
+    expect(updated!.color).toBe("#222");
+    expect(updated!.name).toBe("upd-test-renamed");
   });
 
   it("creates a new label", () => {
