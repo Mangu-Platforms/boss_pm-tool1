@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
-import { listFavorites, addFavorite, removeFavorite } from "@/lib/favorites";
+import { listFavorites, addFavorite, removeFavorite, isFavorite, favoritesCount } from "@/lib/favorites";
 
 const USER_ID = "user-max";
 
-export async function GET() {
-  return NextResponse.json({ favorites: listFavorites(USER_ID) });
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const userId = url.searchParams.get("user_id") || USER_ID;
+  const checkItem = url.searchParams.get("check_item");
+  if (checkItem) {
+    return NextResponse.json({ is_favorite: isFavorite(userId, checkItem) });
+  }
+  return NextResponse.json({ favorites: listFavorites(userId), count: favoritesCount(userId) });
 }
 
 export async function POST(req: Request) {

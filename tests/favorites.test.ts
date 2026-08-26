@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { listFavorites, addFavorite, removeFavorite, isFavorite } from "@/lib/favorites";
+import { listFavorites, addFavorite, removeFavorite, isFavorite, getFavorite, favoritesCount } from "@/lib/favorites";
 
 describe("favorites", () => {
   it("starts empty for a user", () => {
@@ -40,5 +40,16 @@ describe("favorites", () => {
     addFavorite("fav-user6", "issue", "a2", "Second");
     const favs = listFavorites("fav-user6");
     expect(favs[0].item_id).toBe("a2");
+  });
+
+  it("gets favorite by id", () => {
+    const fav = getFavorite("fav-1");
+    expect(fav).not.toBeNull();
+    expect(fav!.user_id).toBe("max");
+  });
+
+  it("counts favorites for user", () => {
+    const count = favoritesCount("max");
+    expect(count).toBeGreaterThanOrEqual(1);
   });
 });

@@ -56,6 +56,9 @@ const links = [
   { href: "/contacts", label: "Contacts" },
   { href: "/okrs", label: "OKRs" },
   { href: "/import-export", label: "Import/Export" },
+  { href: "/workflows", label: "Workflows" },
+  { href: "/api-keys", label: "API Keys" },
+  { href: "/favorites", label: "Favorites" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
