@@ -54,6 +54,8 @@ const links = [
   { href: "/comments", label: "Comments" },
   { href: "/attachments", label: "Attachments" },
   { href: "/contacts", label: "Contacts" },
+  { href: "/okrs", label: "OKRs" },
+  { href: "/import-export", label: "Import/Export" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];

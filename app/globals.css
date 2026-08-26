@@ -1734,3 +1734,59 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
 }
 .ct-form input:focus, .ct-form textarea:focus { border-color: var(--gold-dim); }
 .ct-form textarea { resize: vertical; }
+
+/* OKRs */
+.okr-list { display: flex; flex-direction: column; gap: 16px; margin: 14px 0; }
+.okr-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px 18px;
+}
+.okr-on_track { border-left: 3px solid green; }
+.okr-at_risk { border-left: 3px solid gold; }
+.okr-off_track { border-left: 3px solid red; }
+.okr-achieved { border-left: 3px solid var(--lab); }
+.okr-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.okr-header h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.okr-meta { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+.okr-progress-label { font-size: 13px; font-weight: 600; color: var(--gold); }
+.okr-progress-bar {
+  height: 6px; background: var(--ink-3); border-radius: 3px; overflow: hidden; margin-bottom: 10px;
+}
+.okr-progress-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.3s; }
+.okr-krs { display: flex; flex-direction: column; gap: 8px; }
+.okr-kr {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+  background: var(--ink-3); border-radius: 6px;
+}
+.okr-kr-title { flex: 1; font-size: 13px; }
+.okr-kr-bar {
+  width: 80px; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden;
+}
+.okr-kr-fill { height: 100%; background: var(--lab); border-radius: 2px; transition: width 0.3s; }
+.okr-kr-input {
+  width: 60px; background: var(--ink-2); border: 1px solid var(--line); border-radius: 6px;
+  padding: 4px 6px; color: var(--paper); font-size: 12px; text-align: center; outline: none;
+}
+.okr-kr-input:focus { border-color: var(--gold-dim); }
+.okr-form {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center;
+}
+.okr-form input {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none; flex: 1; min-width: 120px;
+}
+.okr-form input:focus { border-color: var(--gold-dim); }
+
+/* Import / Export */
+.ie-controls { display: flex; gap: 10px; margin: 14px 0; align-items: center; flex-wrap: wrap; }
+.ie-controls select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.ie-controls select:focus { border-color: var(--gold-dim); }
+.ie-preview { margin-top: 16px; }
+.ie-data {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 14px 16px; font-size: 12px; color: var(--paper-dim); overflow-x: auto;
+  max-height: 400px; overflow-y: auto; white-space: pre;
+}
