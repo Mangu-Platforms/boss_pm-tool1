@@ -65,6 +65,9 @@ const links = [
   { href: "/sla-policies", label: "SLA Policies" },
   { href: "/release-notes", label: "Release Notes" },
   { href: "/dashboards", label: "Dashboards" },
+  { href: "/approvals", label: "Approvals" },
+  { href: "/cost-tracking", label: "Cost Tracking" },
+  { href: "/project-templates", label: "Project Templates" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];

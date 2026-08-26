@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 import { listProjectTemplates, getProjectTemplate, createProjectTemplate, deleteProjectTemplate } from "@/lib/project-templates";
 
-export async function GET() {
-  return NextResponse.json({ templates: listProjectTemplates() });
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const category = url.searchParams.get("category");
+  const id = url.searchParams.get("id");
+  if (id) {
+    const tpl = getProjectTemplate(id);
+    if (!tpl) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ template: tpl });
+  }
+  return NextResponse.json({ templates: listProjectTemplates(category || undefined) });
 }
 
 export async function POST(req: Request) {
@@ -23,7 +31,7 @@ export async function POST(req: Request) {
   if (!body.name?.trim() || !body.issues?.length) {
     return NextResponse.json({ error: "name and issues required" }, { status: 400 });
   }
-  const tpl = createProjectTemplate(body.name.trim(), body.description || "", body.issues);
+  const tpl = createProjectTemplate(body.name.trim(), body.description || "", body.issues, body.category || "general");
   return NextResponse.json({ template: tpl }, { status: 201 });
 }
 

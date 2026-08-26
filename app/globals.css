@@ -1967,3 +1967,63 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
   padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none; flex: 1;
 }
 .dash-form input:focus { border-color: var(--gold-dim); }
+
+/* Approvals */
+.apv-list { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; }
+.apv-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.apv-pending { border-left: 3px solid gold; }
+.apv-approved { border-left: 3px solid green; }
+.apv-rejected { border-left: 3px solid red; }
+.apv-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.apv-header h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.apv-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+.apv-notes { font-size: 13px; color: var(--paper-dim); margin: 6px 0 0; font-style: italic; }
+.apv-actions { display: flex; gap: 6px; margin-top: 8px; }
+.apv-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+.apv-form input, .apv-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.apv-form input:focus, .apv-form select:focus { border-color: var(--gold-dim); }
+
+/* Cost Tracking */
+.ct-summary {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px 18px; margin: 14px 0;
+}
+.ct-total { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.ct-total-label { font-size: 14px; color: var(--paper-dim); }
+.ct-total-amount { font-size: 24px; font-weight: 700; color: var(--gold); }
+.ct-breakdown { display: flex; gap: 16px; flex-wrap: wrap; }
+.ct-cat { display: flex; flex-direction: column; gap: 2px; }
+.ct-cat-name { font-size: 12px; color: var(--paper-dim); text-transform: capitalize; }
+.cte-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+.cte-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 14px;
+}
+.cte-header { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.cte-amount { font-weight: 600; color: var(--gold); margin-left: auto; }
+.cte-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+.cte-form input, .cte-form select {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; color: var(--paper); font-size: 13px; outline: none;
+}
+.cte-form input:focus, .cte-form select:focus { border-color: var(--gold-dim); }
+
+/* Project Templates */
+.ptpl-list { display: flex; flex-direction: column; gap: 14px; margin: 14px 0; }
+.ptpl-card {
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.ptpl-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.ptpl-header h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.ptpl-details { display: flex; gap: 12px; margin: 6px 0; }
+.ptpl-labels { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0; }
+.ptpl-label { font-size: 11px; background: var(--ink-3); color: var(--lab); padding: 2px 6px; border-radius: 4px; }
+.ptpl-issues { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.ptpl-issue { display: flex; align-items: center; gap: 8px; font-size: 13px; }
