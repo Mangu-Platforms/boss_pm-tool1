@@ -9,7 +9,14 @@ export type Attachment = {
   created_at: string;
 };
 
-const store: Attachment[] = [];
+const store: Attachment[] = [
+  { id: "att-1", issue_id: "BOSS-1", filename: "api-spec.yaml", content_type: "application/yaml", size_bytes: 15360, url: "/files/api-spec.yaml", uploaded_by: "alice", created_at: "2025-03-08T10:30:00.000Z" },
+  { id: "att-2", issue_id: "BOSS-2", filename: "dashboard-mockup.png", content_type: "image/png", size_bytes: 245760, url: "/files/dashboard-mockup.png", uploaded_by: "carol", created_at: "2025-03-09T09:30:00.000Z" },
+];
+
+export function listAllAttachments(): Attachment[] {
+  return [...store].sort((a, b) => b.created_at.localeCompare(a.created_at));
+}
 
 export function listAttachments(issueId: string): Attachment[] {
   return store.filter((a) => a.issue_id === issueId).sort((a, b) => b.created_at.localeCompare(a.created_at));

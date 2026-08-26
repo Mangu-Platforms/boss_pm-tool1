@@ -51,6 +51,9 @@ const links = [
   { href: "/priorities", label: "Priorities" },
   { href: "/estimates", label: "Estimates" },
   { href: "/webhooks", label: "Webhooks" },
+  { href: "/comments", label: "Comments" },
+  { href: "/attachments", label: "Attachments" },
+  { href: "/contacts", label: "Contacts" },
   { href: "/search", label: "Search" },
   { href: "/settings", label: "Settings" },
 ];
